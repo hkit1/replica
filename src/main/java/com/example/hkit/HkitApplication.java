@@ -1,13 +1,13 @@
-package com.example.hkit1;
+package com.example.hkit;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class Hkit1Application {
+public class HkitApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(Hkit1Application.class, args);
+        SpringApplication.run(HkitApplication.class, args);
     }
 
 }
