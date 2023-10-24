@@ -43,3 +43,7 @@
     height: calc(100% - 96px);
     background-color: orange;
 }
+
+.search_sub {
+    margin: 20px 10px 10px 10px;
+}
