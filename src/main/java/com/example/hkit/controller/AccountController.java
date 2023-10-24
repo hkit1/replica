@@ -55,4 +55,12 @@ public class AccountController {
             return "login";
         }
     }
+
+    /**
+     * 설정 사이트로 이동
+     */
+    @GetMapping("/settings")
+    public String settings() {
+        return "settings";
+    }
 }
