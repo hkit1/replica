@@ -2,6 +2,7 @@ package com.example.hkit.dto;
 
 
 import com.example.hkit.entity.Account;
+import com.example.hkit.entity.Post;
 import com.example.hkit.list.PostVisibility;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,4 +21,14 @@ public class PostDTO {
     private LocalDateTime time;
     private String content;
     private PostVisibility type;
+
+    public static PostDTO toDTO(Post post) {
+        PostDTO postDTO = new PostDTO();
+        postDTO.setId(post.getId());
+        postDTO.setAuthor(post.getAuthor());
+        postDTO.setTime(post.getTime());
+        postDTO.setContent(post.getContent());
+        postDTO.setType(post.getType());
+        return postDTO;
+    }
 }
