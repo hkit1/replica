@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Getter
 @Setter
@@ -24,6 +26,12 @@ public class Account {
 
     @Column
     private Boolean hidden;
+
+    @Column
+    private LocalDateTime created_at;
+
+    @Column
+    private LocalDateTime updated_at;
 
     public static Account toEntity(AccountDTO accountDTO) {
         Account entity = new Account();
