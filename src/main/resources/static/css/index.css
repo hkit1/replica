@@ -34,5 +34,12 @@
 }
 
 .search {
+    width: 100%;
+    height: 48px;
+    background-color: cyan;
+}
 
+.category {
+    height: calc(100% - 96px);
+    background-color: orange;
 }
