@@ -15,6 +15,9 @@ public class Account {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column
+    private String name;
+
     @Column(unique = true)
     private String accountID;
 
@@ -36,6 +39,7 @@ public class Account {
     public static Account toEntity(AccountDTO accountDTO) {
         Account entity = new Account();
         entity.setId(accountDTO.getId());
+        entity.setName(accountDTO.getName());
         entity.setAccountID(accountDTO.getAccountID());
         entity.setAccountPW(accountDTO.getAccountPW());
         entity.setEmail(accountDTO.getEmail());
