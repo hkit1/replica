@@ -47,7 +47,7 @@ public class PostController {
     @PostMapping("/search")
     public String search(@RequestParam(name = "text") String text) {
         // TODO: 2023-10-24 검색 만들기
-        Optional<Post> result = postRepository.findAllByTitleContains(text);
+        Optional<Post> result = postRepository.findAllByContentContains(text);
 
         return "search";
     }

@@ -18,11 +18,11 @@ public class DirectMessage {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "sender", referencedColumnName = "id")
+    @JoinColumn(name = "sender")
     private Account sender;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "receiver", referencedColumnName = "id")
+    @JoinColumn(name = "receiver")
     private Account receiver;
 
     @Column

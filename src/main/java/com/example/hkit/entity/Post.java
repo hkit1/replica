@@ -18,7 +18,7 @@ public class Post {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "author", referencedColumnName = "id")
+    @JoinColumn(name = "author")
     private Account author;
 
     @Column
