@@ -2,6 +2,7 @@ package com.example.hkit.controller;
 
 import com.example.hkit.dto.AccountDTO;
 import com.example.hkit.entity.Account;
+import com.example.hkit.repository.AccountRepository;
 import com.example.hkit.service.AccountService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 @RequiredArgsConstructor
 public class AccountController {
     private final AccountService accountService;
+    private final AccountRepository accountRepository;
 
     /**
      * 회원가입 사이트에서 정보를 입력하고 submit 하면 실행됨.
@@ -43,7 +45,7 @@ public class AccountController {
     /**
      * 로그인 폼에서 submit 을 하면 DB에서 확인함
      *
-     * @return 로그인 성공시 index 화면으로, 실패시 login 화면으로 이동함.
+     * @return 성공시 index, 실패시 login.
      */
     @PostMapping("/login")
     public String login(@ModelAttribute Account account, HttpSession session) {
@@ -57,10 +59,27 @@ public class AccountController {
     }
 
     /**
-     * 설정 사이트로 이동
+     * 설정 사이트로 이동할 때 사용됨.
      */
     @GetMapping("/settings")
     public String settings() {
+        return "settings";
+    }
+
+    /**
+     * 계정 데이터를 업데이트 할 때 사용됨.
+     *
+     * @return settings 으로 이동함.
+     */
+    @PostMapping("/update")
+    public String update(@ModelAttribute AccountDTO accountDTO, HttpSession session) {
+        Account account = accountRepository.getReferenceById(accountDTO.getId());
+        account.setName(accountDTO.getName());
+        account.setAccountID(accountDTO.getAccountID());
+        account.setAccountPW(accountDTO.getAccountPW());
+        account.setEmail(accountDTO.getEmail());
+        account.setHidden(accountDTO.getHidden());
+        accountRepository.save(account);
         return "settings";
     }
 }
