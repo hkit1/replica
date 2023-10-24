@@ -1,6 +1,7 @@
 package com.example.hkit.dto;
 
 import com.example.hkit.entity.Account;
+import com.google.gson.JsonObject;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -33,5 +34,14 @@ public class AccountDTO {
         accountDTO.setUpdated_at(account.getUpdated_at());
 
         return accountDTO;
+    }
+
+    public static JsonObject toJson(Account account) {
+        JsonObject json = new JsonObject();
+        json.addProperty("id", account.getId());
+        json.addProperty("name", account.getName());
+        json.addProperty("accountID", account.getAccountID());
+        json.addProperty("hidden", account.getHidden());
+        return json;
     }
 }

@@ -72,7 +72,7 @@ public class AccountController {
      * @return settings 으로 이동함.
      */
     @PostMapping("/update")
-    public String update(@ModelAttribute AccountDTO accountDTO, HttpSession session) {
+    public String update(@ModelAttribute AccountDTO accountDTO) {
         Account account = accountRepository.getReferenceById(accountDTO.getId());
         account.setName(accountDTO.getName());
         account.setAccountID(accountDTO.getAccountID());

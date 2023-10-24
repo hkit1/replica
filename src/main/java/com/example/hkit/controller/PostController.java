@@ -1,25 +1,26 @@
 package com.example.hkit.controller;
 
+import com.example.hkit.dto.AccountDTO;
 import com.example.hkit.dto.PostDTO;
+import com.example.hkit.entity.Account;
 import com.example.hkit.entity.Post;
+import com.example.hkit.repository.AccountRepository;
 import com.example.hkit.repository.PostRepository;
 import com.example.hkit.service.PostService;
+import com.google.gson.JsonArray;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
 public class PostController {
     private final PostRepository postRepository;
-
     private final PostService postService;
+    private final AccountRepository accountRepository;
 
     /**
      * 글쓰기 사이트에서 글쓰기를 누르면 실행됨.
@@ -44,10 +45,30 @@ public class PostController {
      * @param text 검색 내용
      */
     @PostMapping("/search")
-    public String search(@RequestParam(name = "text") String text, Model model) {
+    public String search(@RequestParam(name = "text") String text) {
         // TODO: 2023-10-24 검색 만들기
         Optional<Post> result = postRepository.findAllByTitleContains(text);
 
         return "search";
+    }
+
+    /**
+     * /search/name 으로 계정 ID 검색을 하면 JSON 형태로 반환함.
+     *
+     * @return JSON 글자로 반환
+     */
+    @ResponseBody
+    @RequestMapping("/search/name")
+    public String search_name(@RequestParam(name = "accountID") String accountID) {
+        JsonArray json = new JsonArray();
+        List<Account> searched = accountRepository.findTop5AccountByAccountIDContains(accountID);
+
+        if (!searched.isEmpty()) {
+            for (Account account : searched) {
+                json.add(AccountDTO.toJson(account));
+            }
+        }
+
+        return json.toString();
     }
 }
