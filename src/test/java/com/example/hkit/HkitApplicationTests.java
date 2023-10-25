@@ -11,21 +11,27 @@ import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDateTime;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class HkitApplicationTests {
+    @Autowired
     AccountRepository accountRepository;
+    @Autowired
     PostRepository postRepository;
+    @Autowired
     DirectMessageRepository directMessageRepository;
 
     @BeforeAll
     public void setup() {
         Account account = new Account();
-        account.setAccountPW("testid");
+        account.setAccountID("testid");
         account.setAccountPW("testpw");
         account.setEmail("testMail");
         account.setHidden(false);
@@ -35,14 +41,14 @@ class HkitApplicationTests {
         accountRepository.save(account);
 
         Account another_account = new Account();
-        account.setAccountPW("testid2");
-        account.setAccountPW("testpw2");
-        account.setEmail("testMail2");
-        account.setHidden(false);
-        account.setCreated_at(LocalDateTime.now());
-        account.setUpdated_at(LocalDateTime.now());
+        another_account.setAccountID("testid2");
+        another_account.setAccountPW("testpw2");
+        another_account.setEmail("testMail2");
+        another_account.setHidden(false);
+        another_account.setCreated_at(LocalDateTime.now());
+        another_account.setUpdated_at(LocalDateTime.now());
 
-        accountRepository.save(account);
+        accountRepository.save(another_account);
 
         Post post = new Post();
         post.setAuthor(account);
@@ -65,16 +71,16 @@ class HkitApplicationTests {
     @Transactional
     public void postTest() {
         Post post = postRepository.findAll().get(0);
-        assert ("contents".equals(post.getContent()));
-        assert ("testMail".equals(post.getAuthor().getEmail()));
+        assertEquals("contains", post.getContent());
+        assertEquals("testMail", post.getAuthor().getEmail());
     }
 
     @Test
     @Transactional
     public void directMessageTest() {
         DirectMessage dm = directMessageRepository.findAll().get(0);
-        assert ("direct".equals(dm.getContent()));
-        assert ("testid".equals(dm.getSender().getAccountID()));
-        assert ("testid2".equals(dm.getReceiver().getAccountID()));
+        assertEquals("direct", dm.getContent());
+        assertEquals("testid", dm.getSender().getAccountID());
+        assertEquals("testid2", dm.getReceiver().getAccountID());
     }
 }
