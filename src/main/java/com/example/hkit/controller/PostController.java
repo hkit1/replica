@@ -50,6 +50,7 @@ public class PostController {
         List<Post> result = postRepository.findAllByContentContains(text);
         if (!result.isEmpty()){
             return "search";
+            //서치를 JSON 파일로 바꿔야되는데 일단 저장
 
         }
             //오류 메세지 만들어서 올리기.(프롬포트든 어디든)
@@ -79,7 +80,7 @@ public class PostController {
 
         // accountid를 account에서 받아와서
         // 그 아이디로 post객체들을 불러와서
-        // post를 모델로 하던njh
+        // post를 모델로 하던
 
         return json.toString();
     }
