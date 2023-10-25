@@ -13,7 +13,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
@@ -47,8 +46,7 @@ public class PostController {
     @PostMapping("/search")
     public String search(@RequestParam(name = "text") String text) {
         // TODO: 2023-10-24 검색 만들기
-        // { "account": { "id": id, "name", name ... }, "time": time, "content": content ...}
-        Optional<Post> result = postRepository.findAllByContentContains(text);
+        List<Post> result = postRepository.findAllByContentContains(text);
 
         return "search";
     }
