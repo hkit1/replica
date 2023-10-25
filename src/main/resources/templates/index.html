@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="ko">
-<head> <!-- 푸쉬 테스트 -->
+<head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <link href="../static/css/index.css" rel="stylesheet">
@@ -22,25 +22,38 @@
     </header>
 
     <div class="container">
-        <div class="navi"> <!-- 왼쪽 네비게이션 영역 -->
-            <nav class="nav flex-column">
-                <div class="category_notice">
-                    <a class="nav-link active" id="notice" aria-current="page" href="http://www.naver.com" target="_blank">알림</a>
-                </div>
-                <div class="category_message">
-                    <a class="nav-link" id="message" href="http://www.google.com" target="_blank">쪽지</a>
-                </div>
-                <div class="category_feed">
-                    <a class="nav-link" id="feed" href="http://www.facebook.com" target="_blank">피드</a>
-                </div>
-                <div class="category_setting">
-                    <a class="nav-link" id="setting" href="http://www.amazon.com" target="_blank">설정</a>
-                </div>
-            </nav>
+        <div class="tabMenu"> <!-- 왼쪽 네비게이션 영역 -->
+            <div class="notice_menu">
+                <input type="radio" id="tab1" name="tabs" checked>
+                <label for="tab1">알림</label>
+            </div>
+            <div class="message_menu">
+                <input type="radio" id="tab2" name="tabs">
+                <label for="tab2">쪽지</label>
+            </div>
+            <div class="feed_menu">
+                <input type="radio" id="tab3" name="tabs">
+                <label for="tab3">피드</label>
+            </div>
+            <div class="setting_menu">
+                <input type="radio" id="tab4" name="tabs">
+                <label for="tab4">설정</label>
+            </div>
         </div>
 
-        <div class="content"> <!-- 콘텐트 영역 -->
-
+        <div class="contents"> <!-- 콘텐츠 영역 -->
+            <div id="notice" class="tabContent">
+                <h1>알림 영역입니다.</h1>
+            </div>
+            <div id="message" class="tabContent">
+                <h1>쪽지 영역입니다.</h1>
+            </div>
+            <div id="feed" class="tabContent">
+                <h1>피드 영역입니다.</h1>
+            </div>
+            <div id="setting" class="tabContent">
+                <h1>설정 영역입니다.</h1>
+            </div>
         </div>
     </div>
 
