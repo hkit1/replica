@@ -43,12 +43,19 @@ public class PostController {
      *
      * @param text 검색 내용
      */
+    @ResponseBody
     @PostMapping("/search")
     public String search(@RequestParam(name = "text") String text) {
         // TODO: 2023-10-24 검색 만들기
         List<Post> result = postRepository.findAllByContentContains(text);
+        if (!result.isEmpty()){
+
+        }
+            //오류 메세지 만들어서 올리기.(프롬포트든 어디든)
 
         return "search";
+
+
     }
 
     /**
@@ -58,6 +65,7 @@ public class PostController {
      */
     @ResponseBody
     @RequestMapping("/search/name")
+            //dto
     public String search_name(@RequestParam(name = "accountID") String accountID) {
         JsonArray json = new JsonArray();
         List<Account> searched = accountRepository.findTop5AccountByAccountIDContains(accountID);
@@ -67,6 +75,10 @@ public class PostController {
                 json.add(AccountDTO.toJson(account));
             }
         }
+
+        // accountid를 account에서 받아와서
+        // 그 아이디로 post객체들을 불러와서
+        // post를 모델로 하던
 
         return json.toString();
     }
