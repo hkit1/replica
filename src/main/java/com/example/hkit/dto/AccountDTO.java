@@ -8,6 +8,8 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -22,6 +24,8 @@ public class AccountDTO {
     private Boolean hidden;
     private LocalDateTime created_at;
     private LocalDateTime updated_at;
+    private Set<Account> followers;
+    private Set<Account> following;
 
     public static AccountDTO toDTO(Account account) {
         AccountDTO accountDTO = new AccountDTO();
@@ -32,6 +36,7 @@ public class AccountDTO {
         accountDTO.setHidden(account.getHidden());
         accountDTO.setCreated_at(account.getCreated_at());
         accountDTO.setUpdated_at(account.getUpdated_at());
+        accountDTO.setFollowers(account.getFollowers());
 
         return accountDTO;
     }

@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -36,6 +38,14 @@ public class Account {
     @Column
     private LocalDateTime updated_at;
 
+    @ManyToMany
+    @JoinTable(name = "followers", joinColumns = @JoinColumn(name = "follower_id"), inverseJoinColumns = @JoinColumn(name = "follower_of_id"))
+    private Set<Account> followers;
+
+    @ManyToMany
+    @JoinTable(name = "following", joinColumns = @JoinColumn(name = "following_id"), inverseJoinColumns = @JoinColumn(name = "following_of_id"))
+    private Set<Account> following;
+
     public static Account toEntity(AccountDTO accountDTO) {
         Account entity = new Account();
         entity.setId(accountDTO.getId());
@@ -44,6 +54,8 @@ public class Account {
         entity.setAccountPW(accountDTO.getAccountPW());
         entity.setEmail(accountDTO.getEmail());
         entity.setHidden(accountDTO.getHidden());
+        entity.setFollowers(accountDTO.getFollowers());
+        entity.setFollowing(accountDTO.getFollowing());
         return entity;
     }
 }

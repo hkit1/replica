@@ -17,6 +17,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -39,43 +40,58 @@ class HkitApplicationTests {
 
     @BeforeAll
     public void setup() {
-        Account account = new Account();
-        account.setAccountID("testid");
-        account.setAccountPW("testpw");
-        account.setName("testName1");
-        account.setEmail("testMail");
-        account.setHidden(false);
-        account.setCreated_at(LocalDateTime.now());
-        account.setUpdated_at(LocalDateTime.now());
+        for (int i = 0; i < 10; i++) {
+            Account account = new Account();
+            account.setAccountID("testid" + i);
+            account.setAccountPW("testpw" + i);
+            account.setName("testName" + i);
+            account.setEmail("testMail" + i);
+            account.setHidden(false);
+            account.setCreated_at(LocalDateTime.now());
+            account.setUpdated_at(LocalDateTime.now());
 
-        accountRepository.save(account);
+            accountRepository.save(account);
+        }
 
-        Account another_account = new Account();
-        another_account.setAccountID("testid2");
-        another_account.setAccountPW("testpw2");
-        another_account.setName("testName2");
-        another_account.setEmail("testMail2");
-        another_account.setHidden(false);
-        another_account.setCreated_at(LocalDateTime.now());
-        another_account.setUpdated_at(LocalDateTime.now());
+        for (int i = 0; i < 10; i++) {
+            Post post = new Post();
+            post.setAuthor(accountRepository.findAll().get(i));
+            post.setTime(LocalDateTime.now());
+            post.setContent("contents" + i);
+            post.setType(PostVisibility.open);
 
-        accountRepository.save(another_account);
+            postRepository.save(post);
+        }
 
-        Post post = new Post();
-        post.setAuthor(account);
-        post.setTime(LocalDateTime.now());
-        post.setContent("contents");
-        post.setType(PostVisibility.open);
+        for (int i = 0; i < 10; i++) {
+            Account a = accountRepository.findAll().get(i);
+            for (int j = 0; j < 10; j++) {
+                Account b = accountRepository.findAll().get(j);
 
-        postRepository.save(post);
+                DirectMessage directMessage = new DirectMessage();
+                directMessage.setSender(a);
+                directMessage.setReceiver(b);
+                directMessage.setDate(LocalDateTime.now());
+                directMessage.setContent("direct");
 
-        DirectMessage directMessage = new DirectMessage();
-        directMessage.setSender(account);
-        directMessage.setReceiver(another_account);
-        directMessage.setDate(LocalDateTime.now());
-        directMessage.setContent("direct");
+                directMessageRepository.save(directMessage);
+            }
+        }
 
-        directMessageRepository.save(directMessage);
+        // todo lazy 오류 수정
+        for (int i = 0; i < 10; i++) {
+            Account a = accountRepository.findAll().get(i);
+            for (int j = 0; j < 10; j++) {
+                Account b = accountRepository.findAll().get(j);
+                if (!Objects.equals(a.getId(), b.getId())) {
+                    a.getFollowers().add(b);
+                    a.setFollowers(a.getFollowers());
+
+                    accountRepository.save(a);
+                }
+
+            }
+        }
     }
 
     /**
@@ -131,5 +147,12 @@ class HkitApplicationTests {
                 )
                 .andExpect(status().isOk())
                 .andExpect(content().string(result));
+    }
+
+    @Test
+    public void followTest() {
+        Account account = accountRepository.findAll().get(0);
+        assertEquals("testid2", account.getFollowers().stream().findFirst().get().getName());
+        assertEquals("testid1", account.getFollowers().stream().findFirst().get().getFollowing().stream().findFirst().get().getName());
     }
 }
