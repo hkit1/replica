@@ -30,17 +30,22 @@ header {
     float: right;
 }
 
-nav {
-    width: 15%;
-    height: 100%;
-    float: left;
-    background-color: blueviolet;
+#search_button {
+    color: #C5E1DE;
 }
 
 .content {
-    width: 100%;
+    width: 85%;
     height: 100vh;
     background-color: blue;
+    float: left;
+}
+
+nav {
+    width: 15%;
+    height: 100vh;
+    float: left;
+    background-color: blueviolet;
 }
 
 .category_notice > #notice {
