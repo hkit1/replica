@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -38,13 +38,16 @@ public class Account {
     @Column
     private LocalDateTime updated_at;
 
-    @ManyToMany
-    @JoinTable(name = "followers", joinColumns = @JoinColumn(name = "follower_id"), inverseJoinColumns = @JoinColumn(name = "follower_of_id"))
-    private Set<Account> followers;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "user_followers",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "follower_id")
+    )
+    private Set<Account> followers = new HashSet<>();
 
-    @ManyToMany
-    @JoinTable(name = "following", joinColumns = @JoinColumn(name = "following_id"), inverseJoinColumns = @JoinColumn(name = "following_of_id"))
-    private Set<Account> following;
+    @ManyToMany(mappedBy = "followers", fetch = FetchType.EAGER)
+    private Set<Account> following = new HashSet<>();
 
     public static Account toEntity(AccountDTO accountDTO) {
         Account entity = new Account();

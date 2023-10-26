@@ -8,7 +8,6 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -37,6 +36,7 @@ public class AccountDTO {
         accountDTO.setCreated_at(account.getCreated_at());
         accountDTO.setUpdated_at(account.getUpdated_at());
         accountDTO.setFollowers(account.getFollowers());
+        accountDTO.setFollowing(account.getFollowing());
 
         return accountDTO;
     }

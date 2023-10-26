@@ -7,6 +7,7 @@ import com.example.hkit.list.PostVisibility;
 import com.example.hkit.repository.AccountRepository;
 import com.example.hkit.repository.DirectMessageRepository;
 import com.example.hkit.repository.PostRepository;
+import com.example.hkit.service.AccountService;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -20,6 +21,7 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -36,9 +38,13 @@ class HkitApplicationTests {
     DirectMessageRepository directMessageRepository;
 
     @Autowired
+    AccountService accountService;
+
+    @Autowired
     MockMvc mockMvc;
 
     @BeforeAll
+    @Transactional
     public void setup() {
         for (int i = 0; i < 10; i++) {
             Account account = new Account();
@@ -84,12 +90,8 @@ class HkitApplicationTests {
             for (int j = 0; j < 10; j++) {
                 Account b = accountRepository.findAll().get(j);
                 if (!Objects.equals(a.getId(), b.getId())) {
-                    a.getFollowers().add(b);
-                    a.setFollowers(a.getFollowers());
-
-                    accountRepository.save(a);
+                    accountService.follow(a, b);
                 }
-
             }
         }
     }
@@ -150,9 +152,12 @@ class HkitApplicationTests {
     }
 
     @Test
+    @Transactional
     public void followTest() {
-        Account account = accountRepository.findAll().get(0);
-        assertEquals("testid2", account.getFollowers().stream().findFirst().get().getName());
-        assertEquals("testid1", account.getFollowers().stream().findFirst().get().getFollowing().stream().findFirst().get().getName());
+        Account first = accountRepository.findAll().get(0);
+        Account second = accountRepository.findAll().get(1);
+
+        assertTrue(first.getFollowing().contains(second));
+        assertTrue(first.getFollowing().contains(second));
     }
 }
