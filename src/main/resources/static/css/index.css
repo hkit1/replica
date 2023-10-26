@@ -69,11 +69,6 @@ header {
     color: deepskyblue;
 }
 
-.tabMenu span {
-    display: block;
-    cursor: pointer;
-}
-
 .tabContent { /* 텝 내용 스타일 */
     display: none;
 }
