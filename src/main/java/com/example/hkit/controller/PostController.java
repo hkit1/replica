@@ -74,8 +74,9 @@ public class PostController {
     }
 
     @PostMapping("/load")
-    public void loadPost(@RequestParam(name = "lastPage") long lastPage, Model model) {
+    public String loadPost(@RequestParam(name = "lastPage") long lastPage, Model model) {
         List<Post> result = postRepository.findTop5ItemsAfterId(lastPage, PageRequest.of(0, 5));
         model.addAttribute(result);
+        return "index";
     }
 }

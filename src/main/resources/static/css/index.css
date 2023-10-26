@@ -125,3 +125,7 @@ header {
     width: 100%;
     text-align: left;
 }
+
+.container > div {
+    padding-left: 5px;
+}
