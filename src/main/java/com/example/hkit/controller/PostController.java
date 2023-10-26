@@ -9,7 +9,9 @@ import com.example.hkit.repository.PostRepository;
 import com.example.hkit.service.PostService;
 import com.google.gson.JsonArray;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -83,5 +85,11 @@ public class PostController {
         // post를 모델로 하던
 
         return json.toString();
+    }
+
+    @PostMapping("/load")
+    public void loadPost(@RequestParam(name = "lastPage") long lastPage, Model model) {
+        List<Post> result = postRepository.findTop5ItemsAfterId(lastPage, PageRequest.of(0, 5));
+        model.addAttribute(result);
     }
 }

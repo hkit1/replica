@@ -10,6 +10,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -21,6 +22,7 @@ public class PostDTO {
     private LocalDateTime time;
     private String content;
     private PostVisibility type;
+    private Set<Post> reply;
 
     public static PostDTO toDTO(Post post) {
         PostDTO postDTO = new PostDTO();

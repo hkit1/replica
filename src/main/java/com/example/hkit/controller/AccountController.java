@@ -45,14 +45,14 @@ public class AccountController {
     /**
      * 로그인 폼에서 submit 을 하면 DB에서 확인함
      *
-     * @return 성공시 index, 실패시 login.
+     * @return 성공시 redirect, 실패시 login.
      */
     @PostMapping("/login")
     public String login(@ModelAttribute Account account, HttpSession session) {
         AccountDTO result = accountService.login(account);
         if (result != null) {
             session.setAttribute("loginId", result);
-            return "index";
+            return "redirect:/";
         } else {
             return "login";
         }
