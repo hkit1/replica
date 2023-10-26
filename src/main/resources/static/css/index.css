@@ -32,7 +32,7 @@ header {
     color: #C5E1DE;
 }
 
-.contents {
+#contents {
     width: 85%;
     height: 100vh;
     background-color: blue;
@@ -40,18 +40,18 @@ header {
     margin-top: -16px;
 }
 
-.tabMenu {
+#tabMenu {
     width: 15%;
     height: 100vh;
     float: left;
     background-color: blueviolet;
 }
 
-.tabMenu input[type="radio"] {
+#tabMenu input[type="radio"] {
     display: none; /* 라디오 버튼 감춤 */
 }
 
-.tabMenu label { /* 텝 제목 스타일 */
+#tabMenu label { /* 텝 제목 스타일 */
     margin: 0 0;
     padding: 15px 25px;
     font-weight: 600; /* 폰트 굵기 */
@@ -60,12 +60,12 @@ header {
     border: 1px solid transparent;
 }
 
-.tabMenu label:hover { /* 마우스 포인터를 올렸을 때 탭 제목 스타일 */
+#tabMenu label:hover { /* 마우스 포인터를 올렸을 때 탭 제목 스타일 */
     color: #222;
     cursor: pointer;
 }
 
-.tabMenu input:checked + label { /* 활성화된 탭 제목 스타일 */
+#tabMenu input:checked + label { /* 활성화된 탭 제목 스타일 */
     color: deepskyblue;
 }
 
@@ -121,7 +121,7 @@ header {
     background-color: slategray;
 }
 
-.container .tabMenu label {
+.container #tabMenu label {
     width: 100%;
     text-align: left;
 }

@@ -22,26 +22,26 @@
     </header>
 
     <div class="container">
-        <div class="tabMenu"> <!-- 왼쪽 네비게이션 영역 -->
+        <div id="tabMenu"> <!-- 왼쪽 네비게이션 영역 -->
             <div class="notice_menu">
-                <input type="radio" id="tab1" name="tabs" onclick="tabMenu_1()">
+                <input id="tab1" name="tabs" onclick="switchMenu(0)" type="radio">
                 <label for="tab1">알림</label>
             </div>
             <div class="message_menu">
-                <input type="radio" id="tab2" name="tabs" onclick="tabMenu_2()">
+                <input id="tab2" name="tabs" onclick="switchMenu(1)" type="radio">
                 <label for="tab2">쪽지</label>
             </div>
             <div class="feed_menu">
-                <input type="radio" id="tab3" name="tabs" onclick="tabMenu_3()">
+                <input id="tab3" name="tabs" onclick="switchMenu(2)" type="radio">
                 <label for="tab3">피드</label>
             </div>
             <div class="setting_menu">
-                <input type="radio" id="tab4" name="tabs" onclick="tabMenu_4()">
+                <input id="tab4" name="tabs" onclick="switchMenu(3)" type="radio">
                 <label for="tab4">설정</label>
             </div>
         </div>
 
-        <div class="contents"> <!-- 콘텐츠 영역 -->
+        <div id="contents"> <!-- 콘텐츠 영역 -->
             <div id="notice" class="tabContent">
                 <!-- 백엔드 데이터 들어오는 곳 -->
                 <h1>알림 영역입니다.</h1>
