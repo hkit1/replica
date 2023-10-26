@@ -69,15 +69,13 @@ header {
     color: deepskyblue;
 }
 
-.tabContent { /* 텝 내용 스타일 */
-    display: none;
+.tabMenu span {
+    display: block;
+    cursor: pointer;
 }
 
-#tab1:checked div[id="notice"] > #notice,
-#tab2:checked div[id="message"] > #message,
-#tab3:checked div[id="feed"] > #feed,
-#tab4:checked div[id="setting"] > #setting {
-    display: block;
+.tabContent { /* 텝 내용 스타일 */
+    display: none;
 }
 
 .notice_menu {
