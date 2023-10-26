@@ -1,13 +1,8 @@
 package com.example.hkit;
 
-import com.example.hkit.entity.Account;
-import com.example.hkit.entity.DirectMessage;
-import com.example.hkit.entity.Post;
+import com.example.hkit.entity.*;
 import com.example.hkit.list.PostVisibility;
-import com.example.hkit.repository.AccountRepository;
-import com.example.hkit.repository.DirectMessageRepository;
-import com.example.hkit.repository.PostRepository;
-import com.example.hkit.service.AccountService;
+import com.example.hkit.repository.*;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -19,9 +14,9 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
+import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -36,9 +31,10 @@ class HkitApplicationTests {
     PostRepository postRepository;
     @Autowired
     DirectMessageRepository directMessageRepository;
-
     @Autowired
-    AccountService accountService;
+    AccountRelationshipRepository accountRelationshipRepository;
+    @Autowired
+    PostRelationshipRepository postRelationshipRepository;
 
     @Autowired
     MockMvc mockMvc;
@@ -46,6 +42,8 @@ class HkitApplicationTests {
     @BeforeAll
     @Transactional
     public void setup() {
+        Random random = new Random();
+
         for (int i = 0; i < 10; i++) {
             Account account = new Account();
             account.setAccountID("testid" + i);
@@ -69,6 +67,22 @@ class HkitApplicationTests {
             postRepository.save(post);
         }
 
+        for (int i = 0; i < postRepository.findAll().size(); i++) {
+            Post post = postRepository.findAll().get(i);
+            for (int j = 0; j < 10; j++) {
+                Post next = postRepository.findAll().get(j);
+
+                if (!Objects.equals(post.getId(), next.getId())) {
+                    PostRelationship postRelationship = new PostRelationship();
+                    System.out.println(post.getContent() + " -> " + next.getContent());
+                    postRelationship.setOriginal(post);
+                    postRelationship.setReply(next);
+
+                    postRelationshipRepository.save(postRelationship);
+                }
+            }
+        }
+
         for (int i = 0; i < 10; i++) {
             Account a = accountRepository.findAll().get(i);
             for (int j = 0; j < 10; j++) {
@@ -78,19 +92,22 @@ class HkitApplicationTests {
                 directMessage.setSender(a);
                 directMessage.setReceiver(b);
                 directMessage.setDate(LocalDateTime.now());
-                directMessage.setContent("direct");
+                directMessage.setContent("direct" + i);
 
                 directMessageRepository.save(directMessage);
             }
         }
 
-        // todo lazy 오류 수정
         for (int i = 0; i < 10; i++) {
             Account a = accountRepository.findAll().get(i);
             for (int j = 0; j < 10; j++) {
                 Account b = accountRepository.findAll().get(j);
                 if (!Objects.equals(a.getId(), b.getId())) {
-                    accountService.follow(a, b);
+                    AccountRelationship accountRelationship = new AccountRelationship();
+                    accountRelationship.setFollower(a);
+                    accountRelationship.setFollowed(b);
+
+                    accountRelationshipRepository.save(accountRelationship);
                 }
             }
         }
@@ -151,13 +168,27 @@ class HkitApplicationTests {
                 .andExpect(content().string(result));
     }
 
+    /**
+     * 계정 팔로잉/팔로워 테스트
+     */
     @Test
     @Transactional
     public void followTest() {
-        Account first = accountRepository.findAll().get(0);
-        Account second = accountRepository.findAll().get(1);
+        AccountRelationship account = accountRelationshipRepository.findAll().get(0);
 
-        assertTrue(first.getFollowing().contains(second));
-        assertTrue(first.getFollowing().contains(second));
+        assertEquals("testName1", account.getFollowed().getName());
+        assertEquals("testName0", account.getFollower().getName());
+    }
+
+    /**
+     * 답글 테스트
+     */
+    @Test
+    @Transactional
+    public void postReplyTest() {
+        PostRelationship post = postRelationshipRepository.findAll().get(0);
+
+        assertEquals("contents0", post.getOriginal().getContent());
+        assertEquals("contents1", post.getReply().getContent());
     }
 }

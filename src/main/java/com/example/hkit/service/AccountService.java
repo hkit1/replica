@@ -2,18 +2,19 @@ package com.example.hkit.service;
 
 import com.example.hkit.dto.AccountDTO;
 import com.example.hkit.entity.Account;
+import com.example.hkit.entity.AccountRelationship;
+import com.example.hkit.repository.AccountRelationshipRepository;
 import com.example.hkit.repository.AccountRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
-import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
 public class AccountService {
     public final AccountRepository accountRepository;
+    public final AccountRelationshipRepository accountRelationshipRepository;
 
     public void save(AccountDTO accountDTO) {
         Account account = Account.toEntity(accountDTO);
@@ -31,29 +32,15 @@ public class AccountService {
         return null;
     }
 
-    @Transactional
-    public Account follow(Account follower, Account target) {
-        follower.getFollowing().add(target);
-        target.getFollowers().add(follower);
-        accountRepository.save(follower);
-        accountRepository.save(target);
-        return follower;
+    public void addFollower(Account account, Account target) {
+        AccountRelationship accountRelationship = new AccountRelationship();
+        accountRelationship.setFollowed(account);
+        accountRelationship.setFollower(target);
+
+        accountRelationshipRepository.save(accountRelationship);
     }
 
-    @Transactional
-    public Account unfollow(Account follower, Account target) {
-        follower.getFollowing().remove(target);
-        target.getFollowers().remove(follower);
-        accountRepository.save(follower);
-        accountRepository.save(target);
-        return follower;
-    }
-
-    public Set<Account> getFollowers(Account account) {
-        return account.getFollowers();
-    }
-
-    public Set<Account> getFollowing(Account account) {
-        return account.getFollowing();
+    public void removeFollower(Account account, Account target) {
+        accountRelationshipRepository.deleteByFollowerIdAndFollowedId(account.getId(), target.getId());
     }
 }
