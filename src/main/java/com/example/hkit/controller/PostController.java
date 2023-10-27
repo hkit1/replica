@@ -49,20 +49,18 @@ public class PostController {
      */
     @ResponseBody
     @PostMapping("/search")
-    public String search(@RequestParam(name = "text") String text, @RequestParam(name = "accountId")@Nullable String accountId) {
+    public String search(@RequestParam(name = "text") String text, @RequestParam(name = "accountId") @Nullable String accountId) {
         // TODO: 2023-10-24 검색 만들기
-        JsonArray jsonArray= new JsonArray();
-        List<Post> result = postService.findText(text,accountId);
-        if(!result.isEmpty()){
-            for(Post post: result){
+        JsonArray jsonArray = new JsonArray();
+        List<Post> result = postService.findText(text, accountId);
+        if (!result.isEmpty()) {
+            for (Post post : result) {
                 jsonArray.add(PostDTO.toJson(post));
             }
 
             //서치를 JSON 파일로 바꿔야되는데 일단 저장.
         }
         return jsonArray.toString();
-
-
     }
 
     /**
@@ -72,7 +70,7 @@ public class PostController {
      */
     @ResponseBody
     @RequestMapping("/search/name")
-            //dto
+    //dto
     public String search_name(@RequestParam(name = "accountID") String accountID) {
         JsonArray json = new JsonArray();
         List<Account> searched = accountRepository.findTop5AccountByAccountIDContains(accountID);

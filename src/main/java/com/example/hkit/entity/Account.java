@@ -12,7 +12,8 @@ import java.time.LocalDateTime;
 @Setter
 @Table(name = "account")
 public class Account {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column

@@ -14,8 +14,9 @@ import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.lang.reflect.Array;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -44,34 +45,33 @@ public class PostService {
     }
 
     //로그인 상태가 아닐 때 Text 검색한 후 리스트를 가져오는 메서드.
-    public List<Post> findText(String text, @Nullable String accountId){
+    public List<Post> findText(String text, @Nullable String accountId) {
         List<Post> list = postRepository.findAllByContentContains(text);
-        List<Post> result= new ArrayList<>();
+        List<Post> result = new ArrayList<>();
         List<AccountRelationship> followed = new ArrayList<>();
         List<Long> idList = new ArrayList<>();
         Account my = new Account();
-        if(accountId!=null) {
+        if (accountId != null) {
             Optional<Account> a = accountRepository.findAccountByAccountID(accountId);
             if (a.isPresent()) {
                 my = a.get();
-                followed= accountRelationshipRepository.findAccountRelationshipsByFollowed_Id(my.getId());
+                followed = accountRelationshipRepository.findAccountRelationshipsByFollowed_Id(my.getId());
             }
         }
-        for(AccountRelationship ac : followed){
+        for (AccountRelationship ac : followed) {
             idList.add(ac.getFollowed().getId());
         }
 
-        for(Post post:list){
-            if(post.getType().equals(PostVisibility.open)){
+        for (Post post : list) {
+            if (post.getType().equals(PostVisibility.open)) {
                 result.add(post);
-            }else if(accountId != null && post.getType().equals(PostVisibility.hidden) && idList.contains(post.getId())){
+            } else if (accountId != null && post.getType().equals(PostVisibility.hidden) && idList.contains(post.getId())) {
                 result.add(post);
-
-            }else if(accountId != null && post.getType().equals(PostVisibility.secret) && post.getAuthor().getId().equals(my.getId())){
+            } else if (accountId != null && post.getType().equals(PostVisibility.secret) && post.getAuthor().getId().equals(my.getId())) {
                 result.add(post);
             }
         }
-         //enum값이 open인걸 확인하고 가져옴
+        //enum값이 open인걸 확인하고 가져옴
         return result;
     }
 

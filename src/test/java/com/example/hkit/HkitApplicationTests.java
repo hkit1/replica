@@ -11,8 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -82,7 +80,6 @@ class HkitApplicationTests {
 
                 if (!Objects.equals(post.getId(), next.getId())) {
                     PostRelationship postRelationship = new PostRelationship();
-                    System.out.println(post.getContent() + " -> " + next.getContent());
                     postRelationship.setOriginal(post);
                     postRelationship.setReply(next);
 
@@ -200,24 +197,20 @@ class HkitApplicationTests {
         assertEquals("contents1", post.getReply().getContent());
     }
 
+    /**
+     * 포스트를 검색했을 때 공개 설정에 따라 표시 되는지 확인
+     *
+     * @throws Exception 서버 오류 또는 result 값이 같지 않을 경우 발생
+     */
     @Test
     public void searchPostTest() throws Exception {
-        String text = "content";
-        String accountId ="testid2" ;
-        String result = "[{\"id\":1,\"name\":\"testName1\",\"accountID\":\"testid\",\"hidden\":false},{\"id\":2,\"name\":\"testName2\",\"accountID\":\"testid2\",\"hidden\":false}]";
-
-        MultiValueMap<String,String> requestparam = new LinkedMultiValueMap<>();
-        requestparam.set("text",text);
-        requestparam.set("accountId", accountId);
+        String result = "[{\"author\":\"testName0\",\"content\":\"contents0\",\"like\":0,\"bookmark\":0,\"type\":\"open\"},{\"author\":\"testName2\",\"content\":\"contents2\",\"like\":0,\"bookmark\":0,\"type\":\"secret\"},{\"author\":\"testName3\",\"content\":\"contents3\",\"like\":0,\"bookmark\":0,\"type\":\"open\"},{\"author\":\"testName6\",\"content\":\"contents6\",\"like\":0,\"bookmark\":0,\"type\":\"open\"},{\"author\":\"testName9\",\"content\":\"contents9\",\"like\":0,\"bookmark\":0,\"type\":\"open\"}]";
 
         mockMvc.perform(post("/search")
-                        .params(requestparam)
-
+                        .param("text", "content")
+                        .param("accountId", "testid2")
                 )
                 .andExpect(status().isOk())
                 .andExpect(content().string(result));
     }
-
-
-
 }
