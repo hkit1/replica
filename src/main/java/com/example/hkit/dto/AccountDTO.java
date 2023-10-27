@@ -12,24 +12,19 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 public class AccountDTO {
-    private Long id;
     private String name;
     private String accountID;
     private String accountPW;
     private String email;
     private Boolean hidden;
-    private String created_at;
-    private String updated_at;
+
 
     public static AccountDTO toDTO(Account account) {
         AccountDTO accountDTO = new AccountDTO();
-        accountDTO.setId(account.getId());
         accountDTO.setName(account.getName());
         accountDTO.setAccountPW(accountDTO.getAccountPW());
         accountDTO.setEmail(account.getEmail());
         accountDTO.setHidden(account.getHidden());
-        accountDTO.setCreated_at(account.getCreated_at().toString());
-        accountDTO.setUpdated_at(account.getUpdated_at().toString());
 
         return accountDTO;
     }

@@ -4,6 +4,7 @@ import com.example.hkit.dto.AccountDTO;
 import com.example.hkit.entity.Account;
 import com.example.hkit.repository.AccountRepository;
 import com.example.hkit.service.AccountService;
+import com.google.gson.JsonObject;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
@@ -79,13 +81,20 @@ public class AccountController {
      */
     @PostMapping("/update")
     public String update(@ModelAttribute AccountDTO accountDTO) {
-        Account account = accountRepository.getReferenceById(accountDTO.getId());
-        account.setName(accountDTO.getName());
-        account.setAccountID(accountDTO.getAccountID());
-        account.setAccountPW(accountDTO.getAccountPW());
-        account.setEmail(accountDTO.getEmail());
-        account.setHidden(accountDTO.getHidden());
-        accountRepository.save(account);
-        return "settings";
+        Optional<Account> account = accountRepository.findAccountByAccountID(accountDTO.getAccountID());
+        JsonObject json = new JsonObject();
+        if (account.isEmpty()) {
+            json.addProperty("error", accountDTO.getAccountID() + " 계정을 찾을 수 없습니다.");
+            return json.toString();
+        } else {
+            Account me = account.get();
+            me.setName(accountDTO.getName());
+            me.setAccountID(accountDTO.getAccountID());
+            me.setAccountPW(accountDTO.getAccountPW());
+            me.setEmail(accountDTO.getEmail());
+            me.setHidden(accountDTO.getHidden());
+            accountRepository.save(me);
+            return "settings";
+        }
     }
 }
