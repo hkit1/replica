@@ -35,10 +35,9 @@ header {
 #contents {
     width: 85%;
     height: 100vh;
-    background-color: blue;
+    background-color: greenyellow;
     float: left;
     margin-top: -16px;
-    overflow-y: scroll;
 }
 
 #tabMenu {
@@ -108,12 +107,12 @@ header {
     background-color: orange;
 }
 
-#feed {
-    width: 100%;
-    height: 100vh;
-    float: left;
-    background-color: chartreuse;
-}
+/*#feed {*/
+/*    width: 100%;*/
+/*    height: 100vh;*/
+/*    float: left;*/
+/*    background-color: chartreuse;*/
+/*}*/
 
 #setting {
     width: 100%;
@@ -129,4 +128,23 @@ header {
 
 .container > div {
     padding-left: 5px;
+}
+
+.post_list {
+    border: 1px solid black;
+    box-sizing: border-box;
+    margin-top: 20px;
+}
+
+.post_list_name {
+    font-weight: bold;
+}
+
+#feed_submit {
+    width: 241px;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
 }
