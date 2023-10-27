@@ -38,6 +38,7 @@ header {
     background-color: blue;
     float: left;
     margin-top: -16px;
+    overflow-y: scroll;
 }
 
 #tabMenu {

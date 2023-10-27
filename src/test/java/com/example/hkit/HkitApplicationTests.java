@@ -120,7 +120,7 @@ class HkitApplicationTests {
     @Transactional
     public void postTest() {
         Post post = postRepository.findAll().get(0);
-        assertEquals("contains", post.getContent());
+        assertEquals("contains0", post.getContent());
         assertEquals("testMail", post.getAuthor().getEmail());
     }
 
@@ -131,8 +131,8 @@ class HkitApplicationTests {
     @Transactional
     public void directMessageTest() {
         DirectMessage dm = directMessageRepository.findAll().get(0);
-        assertEquals("direct", dm.getContent());
-        assertEquals("testid", dm.getSender().getAccountID());
+        assertEquals("direct0", dm.getContent());
+        assertEquals("testid0", dm.getSender().getAccountID());
         assertEquals("testid2", dm.getReceiver().getAccountID());
     }
 

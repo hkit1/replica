@@ -8,16 +8,17 @@ import com.example.hkit.repository.AccountRepository;
 import com.example.hkit.repository.PostRepository;
 import com.example.hkit.service.PostService;
 import com.google.gson.JsonArray;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
+@Transactional
 public class PostController {
     private final PostRepository postRepository;
     private final PostService postService;
@@ -85,10 +86,18 @@ public class PostController {
         return json.toString();
     }
 
-    @PostMapping("/load")
-    public String loadPost(@RequestParam(name = "lastPage") long lastPage, Model model) {
-        List<Post> result = postRepository.findTop5ItemsAfterId(lastPage, PageRequest.of(0, 5));
-        model.addAttribute(result);
-        return "index";
+    @ResponseBody
+    @RequestMapping("/load")
+    public String loadPost(@RequestParam(name = "lastPage") long lastPage) {
+        JsonArray json = new JsonArray();
+        List<Post> searched = postRepository.findTop5ItemsAfterId(lastPage, PageRequest.of(0, 5));
+
+        if (!searched.isEmpty()) {
+            for (Post post : searched) {
+                json.add(PostDTO.toJson(post));
+            }
+        }
+
+        return json.toString();
     }
 }
