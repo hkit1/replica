@@ -50,13 +50,16 @@ public class PostController {
     @PostMapping("/search")
     public String search(@RequestParam(name = "text") String text) {
         // TODO: 2023-10-24 검색 만들기
-        List<Post> result = postService.findText(text);
-        if (!result.isEmpty()){
-            return "search";
+        JsonArray jsonArray= new JsonArray();
+        List<Post> result = postService.findText(text,null);
+        if(!result.isEmpty()){
+            for(Post post: result){
+                jsonArray.add(PostDTO.toJson(post));
+            }
+
             //서치를 JSON 파일로 바꿔야되는데 일단 저장.
         }
-            //오류 메세지 만들어서 올리기.(프롬포트든 어디든)
-        return "search";
+        return jsonArray.toString();
 
 
     }

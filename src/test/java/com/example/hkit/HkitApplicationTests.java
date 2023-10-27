@@ -62,7 +62,11 @@ class HkitApplicationTests {
             post.setAuthor(accountRepository.findAll().get(i));
             post.setTime(LocalDateTime.now());
             post.setContent("contents" + i);
-            post.setType(PostVisibility.open);
+            if(i/2==0) {
+                post.setType(PostVisibility.open);
+            }else {
+                post.setType(PostVisibility.hidden);
+            }
 
             postRepository.save(post);
         }
@@ -191,4 +195,17 @@ class HkitApplicationTests {
         assertEquals("contents0", post.getOriginal().getContent());
         assertEquals("contents1", post.getReply().getContent());
     }
+
+    @Test
+    public void searchPostTest() throws Exception {
+        String id = "test";
+        String result = "[{\"id\":1,\"name\":\"testName1\",\"accountID\":\"testid\",\"hidden\":false},{\"id\":2,\"name\":\"testName2\",\"accountID\":\"testid2\",\"hidden\":false}]";
+
+        mockMvc.perform(post("/search/name")
+                        .param("accountID", id)
+                )
+                .andExpect(status().isOk())
+                .andExpect(content().string(result));
+    }
+
 }

@@ -1,11 +1,15 @@
 package com.example.hkit.service;
 
 import com.example.hkit.dto.PostDTO;
+import com.example.hkit.entity.Account;
 import com.example.hkit.entity.Post;
 import com.example.hkit.entity.PostRelationship;
 import com.example.hkit.list.PostVisibility;
+import com.example.hkit.repository.AccountRelationshipRepository;
+import com.example.hkit.repository.AccountRepository;
 import com.example.hkit.repository.PostRelationshipRepository;
 import com.example.hkit.repository.PostRepository;
+import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +22,7 @@ import java.util.List;
 public class PostService {
     public final PostRepository postRepository;
     public final PostRelationshipRepository postRelationshipRepository;
+    public final AccountRepository accountRepository;
 
     public void save(PostDTO postDTO) {
         Post post = Post.toEntity(postDTO);
@@ -37,17 +42,26 @@ public class PostService {
     }
 
     //로그인 상태가 아닐 때 Text 검색한 후 리스트를 가져오는 메서드.
-    public List<Post> findText(String text){
+    public List<Post> findText(String text, @Nullable Account account){
         List<Post> list = postRepository.findAllByContentContains(text);
-        List<Post> result= new ArrayList<Post>();
-
-        for(Post post:list){
-            if(post.getType().equals(PostVisibility.open)){
-                result.add(post);
-            }
-        }
-        // enum값이 open인걸 확인하고 가져옴
+        List<Post> result= new ArrayList<>();
+        List<Account> accountList = new ArrayList<>();
+//        if(account!=null) {
+//            accountList = accountRepository.findFollowerByAccountID(account.getAccountID());
+//        }
+//
+//        for(Post post:list){
+//            if(post.getType().equals(PostVisibility.open)){
+//                result.add(post);
+//            }else if(account != null && post.getType().equals(PostVisibility.hidden) && accountList.contains(post.getAuthor())){
+//                result.add(post);
+//
+//            }else if(account != null && post.getType().equals(PostVisibility.secret) &&post.getAuthor()==account){
+//                result.add(post);
+//            }
+//        }
+//        // enum값이 open인걸 확인하고 가져옴
         return result;
     }
-    // public List<Post> findText_login(String text, Account account){}
+
 }

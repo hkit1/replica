@@ -41,4 +41,6 @@ public class PostDTO {
         jsonObject.addProperty("bookmark", 0);
         return jsonObject;
     }
+
+
 }
