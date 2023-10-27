@@ -264,6 +264,22 @@ class HkitApplicationTests {
 
     @Test
     public void sendDirectMessageFromClientTest() throws Exception {
-
+//        mockMvc.perform(post("/message")
+//                        .param("authorId", "testid1")
+//                        .param("content", "too-much-texts")
+//                        .param("type", "hidden")
+//                )
+//                .andExpect(status().isOk());
+//
+//        Optional<DirectMessage> post = directMessageRepository.findPostByAuthor_AccountIDAndContent("testid1", "too-much-texts");
+//        if (post.isPresent()) {
+//            DirectMessage me = post.get();
+//            assertEquals("testName3", me.getSender().getName());
+//            assertEquals("testName4", me.getReceiver().getName());
+//            assertEquals("English, 한글, ばか", me.getContent());
+//            assertEquals(LocalDateTime.now().getDayOfWeek(), me.getDate().getDayOfWeek());
+//        } else {
+//            fail();
+//        }
     }
 }
