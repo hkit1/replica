@@ -1,7 +1,6 @@
 package com.example.hkit.service;
 
 import com.example.hkit.dto.PostDTO;
-import com.example.hkit.entity.Account;
 import com.example.hkit.entity.Post;
 import com.example.hkit.entity.PostRelationship;
 import com.example.hkit.list.PostVisibility;
