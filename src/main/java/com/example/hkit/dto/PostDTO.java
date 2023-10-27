@@ -13,14 +13,12 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 public class PostDTO {
-    private Long id;
     private String authorId;
     private String content;
     private String type;
 
     public static PostDTO toDTO(Post post) {
         PostDTO postDTO = new PostDTO();
-        postDTO.setId(post.getId());
         postDTO.setContent(post.getContent());
         postDTO.setType(post.getType().toString());
         return postDTO;

@@ -14,9 +14,11 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -123,7 +125,7 @@ class HkitApplicationTests {
      */
     @Test
     @Transactional
-    public void postTest() {
+    public void databasePostTest() {
         Post post = postRepository.findAll().get(0);
         assertEquals("contains0", post.getContent());
         assertEquals("testMail", post.getAuthor().getEmail());
@@ -134,7 +136,7 @@ class HkitApplicationTests {
      */
     @Test
     @Transactional
-    public void directMessageTest() {
+    public void databaseDirectMessageTest() {
         DirectMessage dm = directMessageRepository.findAll().get(0);
         assertEquals("direct0", dm.getContent());
         assertEquals("testid0", dm.getSender().getAccountID());
@@ -147,7 +149,7 @@ class HkitApplicationTests {
      * @throws Exception 서버 오류 또는 result 값이 같지 않을 경우 발생
      */
     @Test
-    public void searchIdTest() throws Exception {
+    public void searchIdFromClientTest() throws Exception {
         String id = "test";
         String result = "[{\"id\":1,\"name\":\"testName0\",\"accountID\":\"testid0\",\"hidden\":false},{\"id\":2,\"name\":\"testName1\",\"accountID\":\"testid1\",\"hidden\":false},{\"id\":3,\"name\":\"testName2\",\"accountID\":\"testid2\",\"hidden\":false},{\"id\":4,\"name\":\"testName3\",\"accountID\":\"testid3\",\"hidden\":false},{\"id\":5,\"name\":\"testName4\",\"accountID\":\"testid4\",\"hidden\":false}]";
 
@@ -160,7 +162,7 @@ class HkitApplicationTests {
 
     // TODO: 2023-10-25 Spring security 으로 로그인 작업
     @Test
-    public void loginTest() throws Exception {
+    public void loginFromClientTest() throws Exception {
         String id = "testid";
         String pw = "testpw";
         String result = "";
@@ -178,7 +180,7 @@ class HkitApplicationTests {
      */
     @Test
     @Transactional
-    public void followTest() {
+    public void databaseFollowTest() {
         AccountRelationship account = accountRelationshipRepository.findAll().get(0);
 
         assertEquals("testName1", account.getFollowed().getName());
@@ -190,7 +192,7 @@ class HkitApplicationTests {
      */
     @Test
     @Transactional
-    public void postReplyTest() {
+    public void databasePostReplyTest() {
         PostRelationship post = postRelationshipRepository.findAll().get(0);
 
         assertEquals("contents0", post.getOriginal().getContent());
@@ -212,5 +214,56 @@ class HkitApplicationTests {
                 )
                 .andExpect(status().isOk())
                 .andExpect(content().string(result));
+    }
+
+    @Test
+    public void updateAccountFromClientTest() throws Exception {
+        mockMvc.perform(post("/update")
+                        .param("name", "testName0-edited")
+                        .param("accountID", "testid0")
+                        .param("accountPW", "testpw0-edited")
+                        .param("email", "testMail0-edited")
+                        .param("hidden", "false")
+                )
+                .andExpect(status().isOk());
+
+        Optional<Account> account = accountRepository.findAccountByAccountID("testid0");
+        if (account.isPresent()) {
+            Account me = account.get();
+            assertEquals("testName0-edited", me.getName());
+            assertEquals("testid0", me.getAccountID());
+            assertEquals("testpw0-edited", me.getAccountPW());
+            assertEquals("testMail0-edited", me.getEmail());
+            assertEquals(false, me.getHidden());
+        } else {
+            fail();
+        }
+    }
+
+    @Test
+    @Transactional
+    public void postFromClientTest() throws Exception {
+        mockMvc.perform(post("/post")
+                        .param("authorId", "testid1")
+                        .param("content", "too-much-texts")
+                        .param("type", "hidden")
+                )
+                .andExpect(status().isOk());
+
+        Optional<Post> post = postRepository.findPostByAuthor_AccountIDAndContent("testid1", "too-much-texts");
+        if (post.isPresent()) {
+            Post me = post.get();
+            assertEquals("testName1", me.getAuthor().getName());
+            assertEquals("too-much-texts", me.getContent());
+            assertEquals(PostVisibility.hidden, me.getType());
+            assertEquals(LocalDateTime.now().getDayOfWeek(), me.getTime().getDayOfWeek());
+        } else {
+            fail();
+        }
+    }
+
+    @Test
+    public void sendDirectMessageFromClientTest() throws Exception {
+
     }
 }

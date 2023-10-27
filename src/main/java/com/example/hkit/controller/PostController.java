@@ -8,15 +8,19 @@ import com.example.hkit.repository.AccountRepository;
 import com.example.hkit.repository.PostRepository;
 import com.example.hkit.service.PostService;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import jakarta.annotation.Nullable;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
@@ -38,11 +42,19 @@ public class PostController {
      * 글쓰기 폼에서 submit 을 하면 작성 날짜를 추가하고 DB에 쓰기 작업함.
      */
     @PostMapping("/post")
-    public String post(@ModelAttribute PostDTO postDTO) {
-        Post post = Post.toEntity(postDTO);
-        post.setTime(LocalDateTime.now());
-        postService.save(post);
-        return "index";
+    public ResponseEntity<String> post(@ModelAttribute PostDTO postDTO) {
+        Optional<Account> account = accountRepository.findAccountByAccountID(postDTO.getAuthorId());
+        JsonObject json = new JsonObject();
+        if (account.isEmpty()) {
+            json.addProperty("error", postDTO.getAuthorId() + " 계정을 찾을 수 없습니다.");
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json.toString());
+        } else {
+            Post post = Post.toEntity(postDTO);
+            post.setAuthor(account.get());
+            post.setTime(LocalDateTime.now());
+            postService.save(post);
+            return ResponseEntity.status(HttpStatus.OK).build();
+        }
     }
 
     /**

@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 
 @Service
@@ -44,7 +45,7 @@ public class PostService {
 
     //로그인 상태가 아닐 때 Text 검색한 후 리스트를 가져오는 메서드.
     public List<Post> findText(String text, @Nullable String accountId) {
-        List<Post> list = postRepository.findAllByContentContains(text);
+        Set<Post> list = postRepository.findAllByContentContains(text);
         List<Post> result = new ArrayList<>();
         List<AccountRelationship> followed = new ArrayList<>();
         List<Long> idList = new ArrayList<>();

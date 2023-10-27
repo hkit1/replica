@@ -32,7 +32,6 @@ public class Post {
 
     public static Post toEntity(PostDTO postDTO) {
         Post post = new Post();
-        post.setId(postDTO.getId());
         post.setContent(postDTO.getContent());
         post.setType(PostVisibility.valueOf(postDTO.getType()));
         return post;

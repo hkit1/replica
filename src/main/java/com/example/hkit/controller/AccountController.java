@@ -7,6 +7,8 @@ import com.example.hkit.service.AccountService;
 import com.google.gson.JsonObject;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -80,12 +82,12 @@ public class AccountController {
      * @return settings 으로 이동함.
      */
     @PostMapping("/update")
-    public String update(@ModelAttribute AccountDTO accountDTO) {
+    public ResponseEntity<String> update(@ModelAttribute AccountDTO accountDTO) {
         Optional<Account> account = accountRepository.findAccountByAccountID(accountDTO.getAccountID());
-        JsonObject json = new JsonObject();
         if (account.isEmpty()) {
+            JsonObject json = new JsonObject();
             json.addProperty("error", accountDTO.getAccountID() + " 계정을 찾을 수 없습니다.");
-            return json.toString();
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json.toString());
         } else {
             Account me = account.get();
             me.setName(accountDTO.getName());
@@ -94,7 +96,7 @@ public class AccountController {
             me.setEmail(accountDTO.getEmail());
             me.setHidden(accountDTO.getHidden());
             accountRepository.save(me);
-            return "settings";
+            return ResponseEntity.status(HttpStatus.OK).build();
         }
     }
 }
