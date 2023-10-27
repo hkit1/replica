@@ -33,11 +33,7 @@ public class DirectMessage {
 
     public static DirectMessage toEntity(DirectMessageDTO dm) {
         DirectMessage message = new DirectMessage();
-        message.setId(dm.getId());
-        message.setSender(dm.getSender());
-        message.setReceiver(dm.getReceiver());
         message.setContent(dm.getContent());
-        message.setDate(dm.getDate());
         return message;
     }
 }
