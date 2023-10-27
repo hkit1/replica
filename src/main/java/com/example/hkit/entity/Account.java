@@ -39,12 +39,10 @@ public class Account {
 
     public static Account toEntity(AccountDTO accountDTO) {
         Account entity = new Account();
-        entity.setId(accountDTO.getId());
         entity.setName(accountDTO.getName());
         entity.setAccountID(accountDTO.getAccountID());
         entity.setAccountPW(accountDTO.getAccountPW());
         entity.setEmail(accountDTO.getEmail());
-        entity.setHidden(accountDTO.getHidden());
         return entity;
     }
 }

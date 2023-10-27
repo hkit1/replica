@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import java.time.LocalDateTime;
+
 @Controller
 @RequiredArgsConstructor
 public class AccountController {
@@ -30,7 +32,11 @@ public class AccountController {
      */
     @PostMapping("/register")
     public String register(@ModelAttribute AccountDTO accountDTO) {
-        accountService.save(accountDTO);
+        Account account = Account.toEntity(accountDTO);
+        account.setHidden(false);
+        account.setCreated_at(LocalDateTime.now());
+        account.setUpdated_at(LocalDateTime.now());
+        accountService.save(account);
         return "index";
     }
 

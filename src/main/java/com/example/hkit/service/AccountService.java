@@ -16,8 +16,7 @@ public class AccountService {
     public final AccountRepository accountRepository;
     public final AccountRelationshipRepository accountRelationshipRepository;
 
-    public void save(AccountDTO accountDTO) {
-        Account account = Account.toEntity(accountDTO);
+    public void save(Account account) {
         accountRepository.save(account);
     }
 

@@ -7,8 +7,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.time.LocalDateTime;
-
 @Getter
 @Setter
 @NoArgsConstructor
@@ -20,8 +18,8 @@ public class AccountDTO {
     private String accountPW;
     private String email;
     private Boolean hidden;
-    private LocalDateTime created_at;
-    private LocalDateTime updated_at;
+    private String created_at;
+    private String updated_at;
 
     public static AccountDTO toDTO(Account account) {
         AccountDTO accountDTO = new AccountDTO();
@@ -30,8 +28,8 @@ public class AccountDTO {
         accountDTO.setAccountPW(accountDTO.getAccountPW());
         accountDTO.setEmail(account.getEmail());
         accountDTO.setHidden(account.getHidden());
-        accountDTO.setCreated_at(account.getCreated_at());
-        accountDTO.setUpdated_at(account.getUpdated_at());
+        accountDTO.setCreated_at(account.getCreated_at().toString());
+        accountDTO.setUpdated_at(account.getUpdated_at().toString());
 
         return accountDTO;
     }
@@ -42,6 +40,7 @@ public class AccountDTO {
         json.addProperty("name", account.getName());
         json.addProperty("accountID", account.getAccountID());
         json.addProperty("hidden", account.getHidden());
+        json.addProperty("created_at", account.getCreated_at().toString());
         return json;
     }
 }
