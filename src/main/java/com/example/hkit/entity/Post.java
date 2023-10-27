@@ -33,10 +33,8 @@ public class Post {
     public static Post toEntity(PostDTO postDTO) {
         Post post = new Post();
         post.setId(postDTO.getId());
-        post.setAuthor(postDTO.getAuthor());
-        post.setTime(postDTO.getTime());
         post.setContent(postDTO.getContent());
-        post.setType(postDTO.getType());
+        post.setType(PostVisibility.valueOf(postDTO.getType()));
         return post;
     }
 }

@@ -15,6 +15,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Controller
@@ -34,11 +35,13 @@ public class PostController {
     }
 
     /**
-     * 글쓰기 폼에서 submit 을 하면 DB에 쓰기 작업함.
+     * 글쓰기 폼에서 submit 을 하면 작성 날짜를 추가하고 DB에 쓰기 작업함.
      */
     @PostMapping("/post")
     public String post(@ModelAttribute PostDTO postDTO) {
-        postService.save(postDTO);
+        Post post = Post.toEntity(postDTO);
+        post.setTime(LocalDateTime.now());
+        postService.save(post);
         return "index";
     }
 

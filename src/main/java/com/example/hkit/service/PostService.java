@@ -1,6 +1,5 @@
 package com.example.hkit.service;
 
-import com.example.hkit.dto.PostDTO;
 import com.example.hkit.entity.Account;
 import com.example.hkit.entity.AccountRelationship;
 import com.example.hkit.entity.Post;
@@ -27,8 +26,7 @@ public class PostService {
     public final AccountRelationshipRepository accountRelationshipRepository;
     public final AccountRepository accountRepository;
 
-    public void save(PostDTO postDTO) {
-        Post post = Post.toEntity(postDTO);
+    public void save(Post post) {
         postRepository.save(post);
     }
 
