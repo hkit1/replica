@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
@@ -13,7 +13,6 @@
             <div> <!-- 로고 -->
                 <a href="index.html" class="logo"></a>
             </div>
-
             <div class="input-group mb-3" id="search"> <!-- 검색 -->
                 <input type="search" class="form-control" placeholder="검색">
                 <button class="btn btn-outline-secondary" id="search_button" type="button">검색</button>
@@ -22,28 +21,70 @@
     </header>
 
     <div class="container">
-        <div class="navi"> <!-- 왼쪽 네비게이션 영역 -->
-            <nav class="nav flex-column">
-                <div class="category_notice">
-                    <a class="nav-link active" id="notice" aria-current="page" href="http://www.naver.com" target="_blank">알림</a>
-                </div>
-                <div class="category_message">
-                    <a class="nav-link" id="message" href="http://www.google.com" target="_blank">쪽지</a>
-                </div>
-                <div class="category_feed">
-                    <a class="nav-link" id="feed" href="http://www.facebook.com" target="_blank">피드</a>
-                </div>
-                <div class="category_setting">
-                    <a class="nav-link" id="setting" href="http://www.amazon.com" target="_blank">설정</a>
-                </div>
-            </nav>
+        <div id="tabMenu"> <!-- 왼쪽 네비게이션 영역 -->
+            <div class="notice_menu">
+                <input id="tab1" name="tabs" onclick="switchMenu(0)" type="radio">
+                <label for="tab1">알림</label>
+            </div>
+            <div class="message_menu">
+                <input id="tab2" name="tabs" onclick="switchMenu(1)" type="radio">
+                <label for="tab2">쪽지</label>
+            </div>
+            <div class="feed_menu">
+                <input id="tab3" name="tabs" onclick="switchMenu(2)" type="radio">
+                <label for="tab3">피드</label>
+            </div>
+            <div class="setting_menu">
+                <input id="tab4" name="tabs" onclick="switchMenu(3)" type="radio">
+                <label for="tab4">설정</label>
+            </div>
         </div>
 
-        <div class="content"> <!-- 콘텐트 영역 -->
-
+        <div id="contents"> <!-- 콘텐츠 영역 -->
+            <div id="notice" class="tabContent">
+                <!-- 백엔드 데이터 들어오는 곳 -->
+                <h1>알림 영역입니다.</h1>
+            </div>
+            <div id="message" class="tabContent">
+                <!-- 백엔드 데이터 들어오는 곳 -->
+                <h1>쪽지 영역입니다.</h1>
+            </div>
+            <div id="feed" class="tabContent">
+                <!-- 백엔드 데이터 들어오는 곳 -->
+                <h1>피드 영역입니다.</h1>
+                <div class="post_board">
+                    <form action="/post" method="POST">
+                        <textarea name="content" id="post_zone" cols="30" rows="10"></textarea>
+                        <button type="submit">등록</button>
+                    </form>
+                    <div class="post_list">
+                        <div class="post_list_name">이름</div>
+                        <div class="post_list_content">내용</div>
+                        <div class="post_list_nav">
+                            <div class="post_list_like">
+                                <span class="post_list_like_image"></span>
+                                <span class="post_list_like_count"></span>
+                            </div>
+                            <div class="post_list_bookmark">
+                                <span class="post_list_bookmark_image"></span>
+                                <span class="post_list_bookmark_count"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="post">
+                    <div class="post_username"></div>
+                    <div class="post_contents"></div>
+                </div>
+            </div>
+            <div id="setting" class="tabContent">
+                <!-- 백엔드 데이터 들어오는 곳 -->
+                <h1>설정 영역입니다.</h1>
+            </div>
         </div>
     </div>
 
+<script src="../static/script/index.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 </body>
 </html>

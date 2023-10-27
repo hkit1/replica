@@ -49,14 +49,12 @@ public class PostController {
     @PostMapping("/search")
     public String search(@RequestParam(name = "text") String text) {
         // TODO: 2023-10-24 검색 만들기
-        List<Post> result = postRepository.findAllByContentContains(text);
+        List<Post> result = postService.findText(text);
         if (!result.isEmpty()){
             return "search";
             //서치를 JSON 파일로 바꿔야되는데 일단 저장.
-
         }
             //오류 메세지 만들어서 올리기.(프롬포트든 어디든)
-
         return "search";
 
 
@@ -88,8 +86,9 @@ public class PostController {
     }
 
     @PostMapping("/load")
-    public void loadPost(@RequestParam(name = "lastPage") long lastPage, Model model) {
+    public String loadPost(@RequestParam(name = "lastPage") long lastPage, Model model) {
         List<Post> result = postRepository.findTop5ItemsAfterId(lastPage, PageRequest.of(0, 5));
         model.addAttribute(result);
+        return "index";
     }
 }
