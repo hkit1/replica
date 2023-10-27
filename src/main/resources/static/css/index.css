@@ -3,14 +3,26 @@
     padding: 0;
 }
 
+body {
+    font-family: 'Noto Sans KR';
+    overflow: hidden;
+}
+
 .container {
     width: 1280px;
 }
 
 header {
+    position: fixed;
+    top: 0;
     width: 100%;
-    height: 48px;
-    background-color: #07c;
+    height: 60px;
+    background-color: #2196F3;
+    box-shadow: 0 3px 5px rgb(128, 128, 128);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
 }
 
 .logo {
@@ -23,28 +35,34 @@ header {
 }
 
 #search {
-    width: 300px;
+    width: 250px;
     height: 48px;
     float: right;
+    display: flex;
+    align-items: center;
 }
 
-#search_button {
-    color: #C5E1DE;
+#search > form > input {
+    width: 100%;
+    padding: 8px 0 8px 13px;
+    border: none;
+    border-radius: 20px;
+    outline: none;
 }
 
 #contents {
     width: 85%;
     height: 100vh;
-    background-color: greenyellow;
     float: left;
-    margin-top: -16px;
+    margin-top: 60px;
 }
 
 #tabMenu {
+    margin-top: 60px;
     width: 15%;
     height: 100vh;
     float: left;
-    background-color: blueviolet;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
 }
 
 #tabMenu input[type="radio"] {
@@ -131,13 +149,17 @@ header {
 }
 
 .post_list {
-    border: 1px solid black;
-    box-sizing: border-box;
-    margin-top: 20px;
+    padding: 10px;
+    border-bottom: 1px solid rgb(128, 128, 128);
 }
 
 .post_list_name {
     font-weight: bold;
+    margin: 10px 0;
+}
+
+.post_list_content {
+    margin: 20px 0;
 }
 
 #feed_submit {
@@ -147,4 +169,46 @@ header {
 a {
     text-decoration: none;
     color: inherit;
+}
+
+.post {
+    border-top: 1px solid rgb(128, 128, 128);
+}
+
+.post_board > form {
+    margin-top: 5px;
+}
+
+.post_board > form > textarea:hover {
+    border: none;
+}
+
+.post_board > form > textarea {
+    min-height: 150px;
+    width: 100%;
+    padding: 10px;
+    border: none;
+    outline: none;
+    border-inline: none;
+    resize: none;
+    overflow: hidden;
+}
+
+.post_board > form > p {
+    width: 100%;
+    height: 40px;
+
+}
+
+.post {
+    overflow: hidden;
+}
+
+#feed_submit {
+    border: none;
+    border-radius: 50px;
+    width: 100px;
+    height: 40px;
+    margin: 0 10px;
+    float: right;
 }

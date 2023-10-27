@@ -45,3 +45,8 @@ function loadPage() {
 }
 
 loadPage();
+
+function auto_size(e) {
+    e.style.height = 'auto';
+    e.style.height = (e.scrollHeight) + 'px';
+}
