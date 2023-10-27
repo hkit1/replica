@@ -8,6 +8,7 @@ import com.example.hkit.repository.AccountRepository;
 import com.example.hkit.repository.PostRepository;
 import com.example.hkit.service.PostService;
 import com.google.gson.JsonArray;
+import jakarta.annotation.Nullable;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -48,10 +49,10 @@ public class PostController {
      */
     @ResponseBody
     @PostMapping("/search")
-    public String search(@RequestParam(name = "text") String text) {
+    public String search(@RequestParam(name = "text") String text, @RequestParam(name = "accountId")@Nullable String accountId) {
         // TODO: 2023-10-24 검색 만들기
         JsonArray jsonArray= new JsonArray();
-        List<Post> result = postService.findText(text,null);
+        List<Post> result = postService.findText(text,accountId);
         if(!result.isEmpty()){
             for(Post post: result){
                 jsonArray.add(PostDTO.toJson(post));

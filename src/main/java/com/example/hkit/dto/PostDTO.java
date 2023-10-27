@@ -39,6 +39,7 @@ public class PostDTO {
         jsonObject.addProperty("content", post.getContent());
         jsonObject.addProperty("like", 0);
         jsonObject.addProperty("bookmark", 0);
+        jsonObject.addProperty("type", post.getType().toString());
         return jsonObject;
     }
 
