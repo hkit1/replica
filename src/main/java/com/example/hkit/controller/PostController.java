@@ -8,6 +8,7 @@ import com.example.hkit.repository.AccountRepository;
 import com.example.hkit.repository.PostRepository;
 import com.example.hkit.service.PostService;
 import com.google.gson.JsonArray;
+import jakarta.annotation.Nullable;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -48,17 +49,18 @@ public class PostController {
      */
     @ResponseBody
     @PostMapping("/search")
-    public String search(@RequestParam(name = "text") String text) {
+    public String search(@RequestParam(name = "text") String text, @RequestParam(name = "accountId")@Nullable String accountId) {
         // TODO: 2023-10-24 검색 만들기
-        List<Post> result = postRepository.findAllByContentContains(text);
-        if (!result.isEmpty()){
-            return "search";
+        JsonArray jsonArray= new JsonArray();
+        List<Post> result = postService.findText(text,accountId);
+        if(!result.isEmpty()){
+            for(Post post: result){
+                jsonArray.add(PostDTO.toJson(post));
+            }
+
             //서치를 JSON 파일로 바꿔야되는데 일단 저장.
-
         }
-            //오류 메세지 만들어서 올리기.(프롬포트든 어디든)
-
-        return "search";
+        return jsonArray.toString();
 
 
     }

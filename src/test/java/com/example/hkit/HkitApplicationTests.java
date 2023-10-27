@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -62,7 +64,13 @@ class HkitApplicationTests {
             post.setAuthor(accountRepository.findAll().get(i));
             post.setTime(LocalDateTime.now());
             post.setContent("contents" + i);
-            post.setType(PostVisibility.open);
+            if(i%3==0) {
+                post.setType(PostVisibility.open);
+            }else if(i%3==1) {
+                post.setType(PostVisibility.hidden);
+            }else{
+                post.setType(PostVisibility.secret);
+            }
 
             postRepository.save(post);
         }
@@ -144,7 +152,7 @@ class HkitApplicationTests {
     @Test
     public void searchIdTest() throws Exception {
         String id = "test";
-        String result = "[{\"id\":1,\"name\":\"testName1\",\"accountID\":\"testid\",\"hidden\":false},{\"id\":2,\"name\":\"testName2\",\"accountID\":\"testid2\",\"hidden\":false}]";
+        String result = "[{\"id\":1,\"name\":\"testName0\",\"accountID\":\"testid0\",\"hidden\":false},{\"id\":2,\"name\":\"testName1\",\"accountID\":\"testid1\",\"hidden\":false},{\"id\":3,\"name\":\"testName2\",\"accountID\":\"testid2\",\"hidden\":false},{\"id\":4,\"name\":\"testName3\",\"accountID\":\"testid3\",\"hidden\":false},{\"id\":5,\"name\":\"testName4\",\"accountID\":\"testid4\",\"hidden\":false}]";
 
         mockMvc.perform(post("/search/name")
                         .param("accountID", id)
@@ -191,4 +199,25 @@ class HkitApplicationTests {
         assertEquals("contents0", post.getOriginal().getContent());
         assertEquals("contents1", post.getReply().getContent());
     }
+
+    @Test
+    public void searchPostTest() throws Exception {
+        String text = "content";
+        String accountId ="testid2" ;
+        String result = "[{\"id\":1,\"name\":\"testName1\",\"accountID\":\"testid\",\"hidden\":false},{\"id\":2,\"name\":\"testName2\",\"accountID\":\"testid2\",\"hidden\":false}]";
+
+        MultiValueMap<String,String> requestparam = new LinkedMultiValueMap<>();
+        requestparam.set("text",text);
+        requestparam.set("accountId", accountId);
+
+        mockMvc.perform(post("/search")
+                        .params(requestparam)
+
+                )
+                .andExpect(status().isOk())
+                .andExpect(content().string(result));
+    }
+
+
+
 }
