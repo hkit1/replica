@@ -58,13 +58,18 @@ public class AccountController {
      * @return 성공시 redirect, 실패시 login.
      */
     @PostMapping("/login")
-    public String login(@ModelAttribute Account account, HttpSession session) {
+    public ResponseEntity<String> login(@ModelAttribute Account account, HttpSession session) {
         AccountDTO result = accountService.login(account);
+        JsonObject json = new JsonObject();
         if (result != null) {
-            session.setAttribute("loginId", result);
-            return "redirect:/";
+            json.addProperty("accountId", result.getAccountID());
+            json.addProperty("name", result.getName());
+            json.addProperty("email", result.getEmail());
+            json.addProperty("hidden", result.getHidden());
+            return ResponseEntity.status(HttpStatus.OK).body(json.toString());
         } else {
-            return "login";
+            json.addProperty("result", "failed");
+            return ResponseEntity.status(HttpStatus.OK).body(json.toString());
         }
     }
 

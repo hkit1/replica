@@ -246,6 +246,7 @@
             }
         }
     </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
     <script>
         function isLoginMenu(bool) {
             const login = document.getElementById("login")
@@ -257,6 +258,11 @@
                 login.style.display = "block";
                 register.style.display = "none";
             }
+        }
+
+        function login(){
+            const pass = CryptoJS.SHA512(document.getElementById('accountPw').value);
+            document.getElementById('accountPw').value = pass.toString();
         }
     </script>
 </head>
@@ -278,9 +284,9 @@
 <div id="container" class="center">
     <div id="login">
         <div class="title center">로그인</div>
-        <form action="/login" method="post">
-            <input type="text" name="accountId" placeholder="아이디" class="remove_border">
-            <input type="password" name="accountPw" placeholder="비밀번호" class="remove_border">
+        <form action="/login" method="post" onsubmit="login()">
+            <input type="text" id="accountId" name="accountId" placeholder="아이디" class="remove_border" required>
+            <input type="password" id="accountPw" name="accountPw" placeholder="비밀번호" class="remove_border" required>
             <button type="submit" class="remove_border">로그인</button>
             <div id="login_link">
                 <a href="javascript:void(0)" onclick="isLoginMenu(true)">계정이 없으신가요?</a>
@@ -291,9 +297,9 @@
     <div id="register">
         <div class="title center">회원가입</div>
         <form action="/register" method="post">
-            <input type="text" name="accountId" placeholder="아이디" class="remove_border">
-            <input type="password" name="accountPw" placeholder="비밀번호" class="remove_border">
-            <input type="password" name="accountPw_again" placeholder="비밀번호 재입력" class="remove_border">
+            <input type="text" name="accountId" placeholder="아이디" class="remove_border" required>
+            <input type="password" name="accountPw" placeholder="비밀번호" class="remove_border" required>
+            <input type="password" name="accountPw_again" placeholder="비밀번호 재입력" class="remove_border" required>
             <input type="email" name="email" placeholder="이메일" class="remove_border"><br>
             <label>비공개 계정 <input type="checkbox" name="hidden" id="hidden_check"></label>
             <button type="submit" class="remove_border">회원가입</button>
