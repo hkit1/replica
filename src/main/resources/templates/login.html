@@ -34,7 +34,13 @@
             width: 400px;
             height: 260px;
             background-color: white;
-            box-shadow: 10px 20px 30px rgba(0, 0, 0, 0.5);
+            transition: transform ease 0.5s, box-shadow ease 0.5s;
+            box-shadow: 5px 10px 5px rgba(0, 0, 0, 0.5);
+        }
+
+        #login:hover {
+            transform: translateY(-5px);
+            box-shadow: 10px 20px 30px rgba(0, 0, 0, 0.2);
         }
 
         #register {
@@ -42,7 +48,13 @@
             width: 400px;
             height: 450px;
             background-color: white;
-            box-shadow: 10px 20px 30px rgba(0, 0, 0, 0.5);
+            transition: transform ease 0.5s, box-shadow ease 0.5s;
+            box-shadow: 5px 10px 5px rgba(0, 0, 0, 0.5);
+        }
+
+        #register:hover {
+            transform: translateY(-5px);
+            box-shadow: 10px 20px 30px rgba(0, 0, 0, 0.2);
         }
 
         form {
@@ -143,7 +155,6 @@
             background: rgba(255, 255, 255, 0.2);
             animation: animate 25s linear infinite;
             bottom: -150px;
-
         }
 
         .circles li:nth-child(1) {
@@ -152,7 +163,6 @@
             height: 80px;
             animation-delay: 0s;
         }
-
 
         .circles li:nth-child(2) {
             left: 10%;
