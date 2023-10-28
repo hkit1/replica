@@ -1,17 +1,17 @@
 var lastPage = 0;
 
 function switchMenu(num) {
-    const tapMenu = document.getElementById("contents")
-    for (let i = 0; i < tapMenu.children.length; i++) {
+    const content = document.getElementById("contents")
+    for (let i = 0; i < content.children.length; i++) {
         if (num !== i) {
-            tapMenu.children[i].style.display = "none";
+            content.children[i].style.display = "none";
         } else {
-            tapMenu.children[i].style.display = "block";
+            content.children[i].style.display = "block";
         }
     }
 }
 
-switchMenu(2);
+switchMenu(0);
 
 function loadPage() {
     let url = '/load';

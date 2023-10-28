@@ -8,5 +8,5 @@ import java.util.Optional;
 
 @Repository
 public interface DirectMessageRepository extends JpaRepository<DirectMessage, Long> {
-    Optional<DirectMessage> findDirectMessageBySenderAndContent(String sender, String content);
+    Optional<DirectMessage> findDirectMessageBySender_AccountIDAndContent(String sender, String content);
 }

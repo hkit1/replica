@@ -4,7 +4,7 @@
 }
 
 body {
-    font-family: 'Noto Sans KR';
+    font-family: 'Noto Sans KR', serif;
     overflow: hidden;
 }
 
@@ -51,7 +51,7 @@ header {
 }
 
 #contents {
-    width: 85%;
+    width: 80%;
     height: 100vh;
     float: left;
     margin-top: 60px;
@@ -59,7 +59,7 @@ header {
 
 #tabMenu {
     margin-top: 60px;
-    width: 15%;
+    width: 20%;
     height: 100vh;
     float: left;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
@@ -91,22 +91,7 @@ header {
     display: none;
 }
 
-.notice_menu {
-    width: 100%;
-    margin-top: 30px;
-}
-
-.message_menu {
-    width: 100%;
-    margin-top: 30px;
-}
-
-.feed_menu {
-    width: 100%;
-    margin-top: 30px;
-}
-
-.setting_menu {
+#tapMenu > div {
     width: 100%;
     margin-top: 30px;
 }
