@@ -16,6 +16,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -43,19 +44,17 @@ public class PostController {
      * 글쓰기 폼에서 submit 을 하면 작성 날짜를 추가하고 DB에 쓰기 작업함.
      */
     @PostMapping("/post")
-    public ResponseEntity<String> post(@CookieValue(name = "accountId") String accountId, @ModelAttribute PostDTO postDTO) {
+    public String post(@CookieValue(name = "accountId") String accountId, @ModelAttribute PostDTO postDTO, Model model) {
         Optional<Account> account = accountRepository.findAccountByAccountID(new String(Base64.getDecoder().decode(accountId.getBytes())));
-        JsonObject json = new JsonObject();
         if (account.isEmpty()) {
-            json.addProperty("error", postDTO.getAuthorId() + " 계정을 찾을 수 없습니다.");
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json.toString());
+            model.addAttribute("result", "<script>alert(\"" + postDTO.getAuthorId() + " 계정을 찾을 수 없습니다.\");</script>");
         } else {
             Post post = Post.toEntity(postDTO);
             post.setAuthor(account.get());
             post.setTime(LocalDateTime.now());
             postService.save(post);
-            return ResponseEntity.status(HttpStatus.OK).build();
         }
+        return "redirect:/";
     }
 
     /**
