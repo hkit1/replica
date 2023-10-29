@@ -166,15 +166,15 @@ a {
     border-top: 1px solid rgb(128, 128, 128);
 }
 
-.post_board > form {
+#post_board > form {
     margin-top: 5px;
 }
 
-.post_board > form > textarea:hover {
+#post_board > form > textarea:hover {
     border: none;
 }
 
-.post_board > form > textarea {
+#post_board > form > textarea {
     min-height: 150px;
     width: 100%;
     padding: 10px;
@@ -185,7 +185,7 @@ a {
     overflow: hidden;
 }
 
-.post_board > form > p {
+#post_board > form > p {
     width: 100%;
     height: 40px;
 

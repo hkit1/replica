@@ -11,7 +11,7 @@ function switchMenu(num) {
     }
 }
 
-switchMenu(0);
+switchMenu(2);
 
 function loadPage() {
     let url = '/load';
@@ -49,4 +49,9 @@ loadPage();
 function auto_size(e) {
     e.style.height = 'auto';
     e.style.height = (e.scrollHeight) + 'px';
+}
+
+isLogin = (document.cookie.match(/^(?:.*;)?\s*accountId\s*=\s*([^;]+)(?:.*)?$/)||[undefined,null])[1]
+if (isLogin == null) {
+    document.getElementById("post_board").style.display = "none";
 }
