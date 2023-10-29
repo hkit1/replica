@@ -53,7 +53,17 @@
                     <form action="/post" method="POST">
                         <textarea id="post_zone" name="content" oninput="auto_size(this)"
                                   placeholder="무슨 생각을 하고 계신가요?"></textarea>
-                        <p><button type="submit" id="feed_submit">등록</button></p>
+                        <p>
+                            <span id="type_box">
+                                <label for="visibility">공개 설정</label>
+                                <select name="type" id="visibility">
+                                    <option value="open">공개</option>
+                                    <option value="hidden">팔로워 에게만 공개</option>
+                                    <option value="secret">비공개</option>
+                                </select>
+                            </span>
+                            <button type="submit" id="feed_submit">등록</button>
+                        </p>
                     </form>
                     <div id="post_box"></div>
                 </div>

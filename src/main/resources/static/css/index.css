@@ -203,3 +203,9 @@ a {
     margin: 0 10px;
     float: right;
 }
+
+#type_box {
+    position: relative;
+    top: 6px;
+    left: 10px;
+}

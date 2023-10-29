@@ -19,6 +19,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 
@@ -42,8 +43,8 @@ public class PostController {
      * 글쓰기 폼에서 submit 을 하면 작성 날짜를 추가하고 DB에 쓰기 작업함.
      */
     @PostMapping("/post")
-    public ResponseEntity<String> post(@ModelAttribute PostDTO postDTO) {
-        Optional<Account> account = accountRepository.findAccountByAccountID(postDTO.getAuthorId());
+    public ResponseEntity<String> post(@CookieValue(name = "accountId") String accountId, @ModelAttribute PostDTO postDTO) {
+        Optional<Account> account = accountRepository.findAccountByAccountID(new String(Base64.getDecoder().decode(accountId.getBytes())));
         JsonObject json = new JsonObject();
         if (account.isEmpty()) {
             json.addProperty("error", postDTO.getAuthorId() + " 계정을 찾을 수 없습니다.");
