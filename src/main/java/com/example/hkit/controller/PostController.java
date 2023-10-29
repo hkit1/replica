@@ -5,11 +5,13 @@ import com.example.hkit.dto.PostDTO;
 import com.example.hkit.entity.Account;
 import com.example.hkit.entity.Post;
 import com.example.hkit.repository.AccountRepository;
+import com.example.hkit.repository.PostLikeRepository;
 import com.example.hkit.repository.PostRepository;
 import com.example.hkit.service.PostService;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import jakarta.annotation.Nullable;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -29,8 +31,20 @@ import java.util.Optional;
 @Transactional
 public class PostController {
     private final PostRepository postRepository;
+    private final PostLikeRepository postLikeRepository;
     private final PostService postService;
     private final AccountRepository accountRepository;
+
+    /**
+     * 좋아요 횟수를 계산해서 반환
+     * @param post 검색할 포스트 대상
+     * @return Post entity 에서 json 으로 변환된 값
+     */
+    private JsonObject getPost(Post post){
+        JsonObject parsed = PostDTO.toJson(post);
+        parsed.addProperty("like", postLikeRepository.findAllByPostId(post.getId()).size());
+        return PostDTO.toJson(post);
+    }
 
     /**
      * 글쓰기 사이트에서 글쓰기를 누르면 실행됨.
@@ -70,7 +84,7 @@ public class PostController {
         List<Post> result = postService.findText(text, accountId);
         if (!result.isEmpty()) {
             for (Post post : result) {
-                jsonArray.add(PostDTO.toJson(post));
+                jsonArray.add(getPost(post));
             }
 
             //서치를 JSON 파일로 바꿔야되는데 일단 저장.
@@ -111,10 +125,16 @@ public class PostController {
 
         if (!searched.isEmpty()) {
             for (Post post : searched) {
-                json.add(PostDTO.toJson(post));
+                json.add(getPost(post));
             }
         }
 
         return json.toString();
     }
+
+    /*@ResponseBody
+    @PostMapping("/like/{id}")
+    public String like(@RequestParam(name = "id") Long id, @CookieValue(name = "accountId") @Nullable String accountId, HttpServletResponse response, Model model) {
+
+    }*/
 }

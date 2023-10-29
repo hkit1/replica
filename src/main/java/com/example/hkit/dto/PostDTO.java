@@ -2,11 +2,13 @@ package com.example.hkit.dto;
 
 
 import com.example.hkit.entity.Post;
+import com.example.hkit.repository.PostRepository;
 import com.google.gson.JsonObject;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Getter
 @Setter
@@ -28,11 +30,8 @@ public class PostDTO {
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("author", post.getAuthor().getName());
         jsonObject.addProperty("content", post.getContent());
-        jsonObject.addProperty("like", 0);
         jsonObject.addProperty("bookmark", 0);
         jsonObject.addProperty("type", post.getType().toString());
         return jsonObject;
     }
-
-
 }
