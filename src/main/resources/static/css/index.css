@@ -11,6 +11,16 @@ body {
     width: 1280px;
 }
 
+html {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    overflow-y: scroll;
+}
+
+html::-webkit-scrollbar {
+    display: none;
+}
+
 header {
     position: fixed;
     top: 0;
@@ -52,7 +62,7 @@ header {
 #contents {
     width: 80%;
     height: 100vh;
-    float: left;
+    float: right;
     margin-top: 60px;
 }
 
