@@ -25,15 +25,15 @@
     <div class="container">
         <div id="tabMenu"> <!-- 왼쪽 네비게이션 영역 -->
             <div >
-                <input id="tab3" name="tabs" onclick="switchMenu(0)" type="radio">
+                <input id="tab3" name="tabs" onclick="switchMenu(2)" type="radio">
                 <label for="tab3">피드</label>
             </div>
             <div>
-                <input id="tab1" name="tabs" onclick="switchMenu(1)" type="radio">
+                <input id="tab1" name="tabs" onclick="switchMenu(0)" type="radio">
                 <label for="tab1">알림</label>
             </div>
             <div>
-                <input id="tab2" name="tabs" onclick="switchMenu(2)" type="radio">
+                <input id="tab2" name="tabs" onclick="switchMenu(1)" type="radio">
                 <label for="tab2">쪽지</label>
             </div>
             <div>
@@ -41,7 +41,7 @@
                 <label for="tab4">설정</label>
             </div>
             <div>
-                <label><a href="/login">로그인</a></label>
+                <label><span th:utext="${login}"></span></label>
             </div>
         </div>
 

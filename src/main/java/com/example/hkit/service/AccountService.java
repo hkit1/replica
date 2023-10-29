@@ -31,6 +31,11 @@ public class AccountService {
         return null;
     }
 
+    public boolean checkExists(String accountId) {
+        Optional<Account> byId = accountRepository.findAccountByAccountID(accountId);
+        return byId.isPresent();
+    }
+
     public void addFollower(Account account, Account target) {
         AccountRelationship accountRelationship = new AccountRelationship();
         accountRelationship.setFollowed(account);
