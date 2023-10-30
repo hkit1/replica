@@ -3,6 +3,7 @@ package com.example.hkit;
 import com.example.hkit.entity.*;
 import com.example.hkit.list.PostVisibility;
 import com.example.hkit.repository.*;
+import jakarta.servlet.http.Cookie;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -13,15 +14,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDateTime;
+import java.util.Base64;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -41,15 +41,15 @@ class HkitApplicationTests {
     @Autowired
     MockMvc mockMvc;
 
+    Base64.Encoder encoder = Base64.getEncoder();
+
     @BeforeAll
     @Transactional
     public void setup() {
-        Random random = new Random();
-
         for (int i = 0; i < 10; i++) {
             Account account = new Account();
             account.setAccountID("testid" + i);
-            account.setAccountPW("testpw" + i);
+            account.setAccountPW(encoder.encodeToString(("testpw" + i).getBytes()));
             account.setName("testName" + i);
             account.setEmail("testMail" + i);
             account.setHidden(false);
@@ -127,8 +127,8 @@ class HkitApplicationTests {
     @Transactional
     public void databasePostTest() {
         Post post = postRepository.findAll().get(0);
-        assertEquals("contains0", post.getContent());
-        assertEquals("testMail", post.getAuthor().getEmail());
+        assertEquals("contents0", post.getContent());
+        assertEquals("testMail0", post.getAuthor().getEmail());
     }
 
     /**
@@ -151,7 +151,7 @@ class HkitApplicationTests {
     @Test
     public void searchIdFromClientTest() throws Exception {
         String id = "test";
-        String result = "[{\"id\":1,\"name\":\"testName0\",\"accountID\":\"testid0\",\"hidden\":false},{\"id\":2,\"name\":\"testName1\",\"accountID\":\"testid1\",\"hidden\":false},{\"id\":3,\"name\":\"testName2\",\"accountID\":\"testid2\",\"hidden\":false},{\"id\":4,\"name\":\"testName3\",\"accountID\":\"testid3\",\"hidden\":false},{\"id\":5,\"name\":\"testName4\",\"accountID\":\"testid4\",\"hidden\":false}]";
+        String result = "[{\"id\":1,\"name\":\"testName0-edited\",\"accountID\":\"testid0\",\"hidden\":false,\"created_at\":\"2023-10-30T09:13:32.708146\"},{\"id\":2,\"name\":\"testName1\",\"accountID\":\"testid1\",\"hidden\":false,\"created_at\":\"2023-10-30T09:13:32.882155\"},{\"id\":3,\"name\":\"testName2\",\"accountID\":\"testid2\",\"hidden\":false,\"created_at\":\"2023-10-30T09:13:32.898154\"},{\"id\":4,\"name\":\"testName3\",\"accountID\":\"testid3\",\"hidden\":false,\"created_at\":\"2023-10-30T09:13:32.915148\"},{\"id\":5,\"name\":\"testName4\",\"accountID\":\"testid4\",\"hidden\":false,\"created_at\":\"2023-10-30T09:13:32.926148\"}]";
 
         mockMvc.perform(post("/search/name")
                         .param("accountID", id)
@@ -163,8 +163,8 @@ class HkitApplicationTests {
     // TODO: 2023-10-25 Spring security 으로 로그인 작업
     @Test
     public void loginFromClientTest() throws Exception {
-        String id = "testid";
-        String pw = "testpw";
+        String id = "testid0";
+        String pw = encoder.encodeToString("testpw0".getBytes());
         String result = "";
 
         mockMvc.perform(post("/login")
@@ -172,7 +172,7 @@ class HkitApplicationTests {
                         .param("accountPW", pw)
                 )
                 .andExpect(status().isOk())
-                .andExpect(content().string(result));
+                .andExpect(model().attribute("login", "testName0"));
     }
 
     /**
@@ -206,7 +206,7 @@ class HkitApplicationTests {
      */
     @Test
     public void searchPostTest() throws Exception {
-        String result = "[{\"author\":\"testName0\",\"content\":\"contents0\",\"like\":0,\"bookmark\":0,\"type\":\"open\"},{\"author\":\"testName2\",\"content\":\"contents2\",\"like\":0,\"bookmark\":0,\"type\":\"secret\"},{\"author\":\"testName3\",\"content\":\"contents3\",\"like\":0,\"bookmark\":0,\"type\":\"open\"},{\"author\":\"testName6\",\"content\":\"contents6\",\"like\":0,\"bookmark\":0,\"type\":\"open\"},{\"author\":\"testName9\",\"content\":\"contents9\",\"like\":0,\"bookmark\":0,\"type\":\"open\"}]";
+        String result = "[{\"author\":\"testName0\",\"content\":\"contents0\",\"bookmark\":0,\"type\":\"open\"},{\"author\":\"testName3\",\"content\":\"contents3\",\"bookmark\":0,\"type\":\"open\"},{\"author\":\"testName6\",\"content\":\"contents6\",\"bookmark\":0,\"type\":\"open\"},{\"author\":\"testName9\",\"content\":\"contents9\",\"bookmark\":0,\"type\":\"open\"}]";
 
         mockMvc.perform(post("/search")
                         .param("text", "content")
@@ -244,11 +244,11 @@ class HkitApplicationTests {
     @Transactional
     public void postFromClientTest() throws Exception {
         mockMvc.perform(post("/post")
-                        .param("authorId", "testid1")
+                        .cookie(new Cookie("accountId", encoder.encodeToString("testid1".getBytes())))
                         .param("content", "too-much-texts")
                         .param("type", "hidden")
                 )
-                .andExpect(status().isOk());
+                .andExpect(status().isFound());
 
         Optional<Post> post = postRepository.findPostByAuthor_AccountIDAndContent("testid1", "too-much-texts");
         if (post.isPresent()) {

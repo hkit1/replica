@@ -11,12 +11,9 @@ import com.example.hkit.service.PostService;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import jakarta.annotation.Nullable;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -79,15 +76,15 @@ public class PostController {
     @ResponseBody
     @PostMapping("/search")
     public String search(@RequestParam(name = "text") String text, @RequestParam(name = "accountId") @Nullable String accountId) {
-        // TODO: 2023-10-24 검색 만들기
         JsonArray jsonArray = new JsonArray();
         List<Post> result = postService.findText(text, accountId);
         if (!result.isEmpty()) {
             for (Post post : result) {
-                jsonArray.add(getPost(post));
+                JsonObject p = getPost(post);
+                if (!p.get("type").getAsString().equals("secret")) {
+                    jsonArray.add(getPost(post));
+                }
             }
-
-            //서치를 JSON 파일로 바꿔야되는데 일단 저장.
         }
         return jsonArray.toString();
     }
