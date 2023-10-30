@@ -27,11 +27,11 @@ header {
     width: 100%;
     height: 60px;
     background-color: #2196F3;
-    box-shadow: 0 3px 5px rgb(128, 128, 128);
+    box-shadow: 0 3px 5px rgb(128, 128, 128, 0.5);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    z-index: 1;
+    z-index: 6;
 }
 
 .logo {
@@ -60,10 +60,14 @@ header {
 }
 
 #contents {
-    width: 80%;
-    height: 100vh;
+    width: 100%;
+    height: 100%;
     float: right;
     margin-top: 60px;
+    background-color: white;
+    z-index: 4;
+    position: relative;
+    padding-left: 20%;
 }
 
 #tabMenu {
@@ -74,7 +78,8 @@ header {
     height: 100vh;
     float: right;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
-    z-index: 0;
+    z-index: 5;
+    background-color: white;
 }
 
 #tabMenu input[type="radio"] {
@@ -174,10 +179,6 @@ a {
     color: inherit;
 }
 
-.post {
-    border-top: 1px solid rgb(128, 128, 128);
-}
-
 #post_board > form {
     margin-top: 5px;
 }
@@ -200,10 +201,11 @@ a {
 #post_board > form > p {
     width: 100%;
     height: 40px;
-
 }
 
 .post {
+    border-top: 1px solid rgb(128, 128, 128);
+    box-sizing: border-box;
     overflow: hidden;
 }
 

@@ -1,4 +1,25 @@
-var lastPage = 0;
+function getCookie(cname) {
+    let name = cname + "=";
+    let ca = document.cookie.split(';');
+    for (let i = 0; i < ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0) === ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) === 0) {
+            return c.substring(name.length, c.length);
+        }
+    }
+    return "";
+}
+
+lastPage = 5;
+haslastPage = (document.cookie.match(/^(?:.*;)?\s*lastPage\s*=\s*([^;]+)(?:.*)?$/) || [undefined, null])[1]
+if (haslastPage == null) {
+    document.cookie = "lastPage=5";
+} else {
+    lastPage = Number(getCookie("lastPage"));
+}
 
 function switchMenu(num) {
     const content = document.getElementById("contents")
@@ -12,6 +33,8 @@ function switchMenu(num) {
 }
 
 switchMenu(2);
+
+var lastPageContent = "null";
 
 function loadPage() {
     let url = '/load';
@@ -33,8 +56,11 @@ function loadPage() {
                         '</div> ' +
                         '</div> ' +
                         '</div>';
-                    document.getElementById("post_box").innerHTML += result;
+                    if (lastPageContent !== document.getElementById("post_box").innerHTML) {
+                        document.getElementById("post_box").innerHTML += result;
+                    }
                 }
+                lastPageContent = document.getElementById("post_box").innerHTML;
             })
         })
         .catch(err => {
@@ -44,14 +70,21 @@ function loadPage() {
     lastPage += 5;
 }
 
-loadPage();
+loadPage()
+
+window.addEventListener('scroll', function () {
+    const isScrollAtBottom = window.innerHeight + window.scrollY >= document.getElementById("contents").offsetHeight;
+    if (isScrollAtBottom) {
+        loadPage()
+    }
+});
 
 function auto_size(e) {
     e.style.height = 'auto';
     e.style.height = (e.scrollHeight) + 'px';
 }
 
-isLogin = (document.cookie.match(/^(?:.*;)?\s*accountId\s*=\s*([^;]+)(?:.*)?$/)||[undefined,null])[1]
+isLogin = (document.cookie.match(/^(?:.*;)?\s*accountId\s*=\s*([^;]+)(?:.*)?$/) || [undefined, null])[1];
 if (isLogin == null) {
     document.getElementById("post_board").style.display = "none";
 }
