@@ -34,9 +34,9 @@ function switchMenu(num) {
 
 switchMenu(2);
 
-var lastPageContent = "null";
+//var lastPageContent = "null";
 
-function loadPage() {
+/*function loadPage() {
     let url = '/load';
     fetch(url + "?lastPage=" + lastPage)
         .then(res => {
@@ -56,11 +56,11 @@ function loadPage() {
                         '</div> ' +
                         '</div> ' +
                         '</div>';
-                    if (lastPageContent !== document.getElementById("post_box").innerHTML) {
+                    ///if (lastPageContent !== document.getElementById("post_box").innerHTML) {
                         document.getElementById("post_box").innerHTML += result;
-                    }
+                    //}
                 }
-                lastPageContent = document.getElementById("post_box").innerHTML;
+                //lastPageContent = document.getElementById("post_box").innerHTML;
             })
         })
         .catch(err => {
@@ -70,14 +70,14 @@ function loadPage() {
     lastPage += 5;
 }
 
-loadPage()
+loadPage()*/
 
-window.addEventListener('scroll', function () {
+/*window.addEventListener('scroll', function () {
     const isScrollAtBottom = window.innerHeight + window.scrollY >= document.getElementById("contents").offsetHeight;
     if (isScrollAtBottom) {
         loadPage()
     }
-});
+});*/
 
 function auto_size(e) {
     e.style.height = 'auto';
