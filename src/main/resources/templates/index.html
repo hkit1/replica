@@ -62,7 +62,60 @@
 
         <div id="contents">
             <div class="tabContent" id="notice"></div>
-            <div class="tabContent" id="message"></div>
+
+            <div class="tabContent" id="message">
+                <div class="message_list">
+                    <div class="message_header">
+                        <div class="message_header_header">
+                            <p class="message_font">쪽지</p>
+                        </div>
+
+                        <div id="message_search">
+                            <form>
+                                <input name="message_search" placeholder="쪽지 검색하기" type="search">
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="message_body">
+                        <div class="message_content">
+                            <a href="#"> <!-- TODO : 쪽지 1개 누르면 바로 오른쪽에 상세 쪽지 나오도록 (사람마다 달라야 함!) -->
+                                <div class="photo"> <!-- 왼쪽 사진 영역 -->
+
+                                </div>
+
+                                <div class="message_nickname_content">
+                                    <div class="message_nickname">
+                                        BigRabbitVillain
+                                    </div>
+                                    <div class="message_cont">
+                                        링크에 😆반응을 보냈습니다
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="message_detail">
+                    <div class="message_detail_header">
+                        <p class="message_font">BigRabbitVillain</p>
+                    </div>
+
+                    <div class="message_detail_content"> <!-- 오른쪽 상세 메시지 영역에 가운데 메시지 출력 부분 -->
+
+                    </div>
+
+                    <div class="message_detail_footer">
+                        <div class="message_write">
+                            <form>
+                                <input name="message_write" placeholder="새 쪽지 작성하기" type="search">
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div id="feed" class="tabContent">
                 <div id="post_board">
                     <form action="/post" id="post_form" method="POST">
