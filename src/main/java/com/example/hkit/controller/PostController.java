@@ -4,6 +4,7 @@ import com.example.hkit.dto.AccountDTO;
 import com.example.hkit.dto.PostDTO;
 import com.example.hkit.entity.Account;
 import com.example.hkit.entity.Post;
+import com.example.hkit.entity.PostLike;
 import com.example.hkit.repository.AccountRepository;
 import com.example.hkit.repository.PostLikeRepository;
 import com.example.hkit.repository.PostRepository;
@@ -22,6 +23,7 @@ import java.time.LocalDateTime;
 import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Controller
 @RequiredArgsConstructor
@@ -139,4 +141,27 @@ public class PostController {
     public String like(@RequestParam(name = "id") Long id, @CookieValue(name = "accountId") @Nullable String accountId, HttpServletResponse response, Model model) {
 
     }*/
+
+    // like 좋아요 구현
+    @PostMapping("/like")
+    public String postLike(@RequestParam(name="id") long id, @CookieValue(name = "accountId") @Nullable String accountId) {
+        Set<PostLike> liked = postLikeRepository.findAllByPostId(id);
+
+        for (PostLike post : liked) {
+            if (post.getAccount().getAccountID().equals(accountId))
+                postLikeRepository.deleteByAccount_AccountID(accountId);
+            else {
+                PostLike postLike = new PostLike();
+                Optional<Post> post1 = postRepository.findById(id);
+                postLike.setPost(post1.get());
+                Optional<Account> account = accountRepository.findAccountByAccountID(accountId);
+                postLike.setAccount(account.get());
+
+                postLikeRepository.save(postLike);
+            }
+        }
+
+        return "{ like : " + liked + " }";
+    }
+
 }
