@@ -12,13 +12,16 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import jakarta.annotation.Nullable;
 import jakarta.transaction.Transactional;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
@@ -115,23 +118,28 @@ public class PostController {
     }
 
     @ResponseBody
-    @RequestMapping("/load")
-    public String loadPost(@RequestParam(name = "lastPage") long lastPage) {
-        JsonArray json = new JsonArray();
-        List<Post> searched = postRepository.findTop5ItemsAfterId(lastPage, PageRequest.of(0, 5));
+    @GetMapping("/index")
+    public String loadPost(@RequestParam(name = "accountID") @Nullable String accountID, Model model) {
+        List<Post> list = postService.findAll(accountID);
+        List<Postlist> postlists = new ArrayList<>();
 
-        if (!searched.isEmpty()) {
-            for (Post post : searched) {
-                json.add(getPost(post));
-            }
+        for(Post post : list){
+            Postlist postlist = new Postlist();
+            postlist.setAuthor(post.getAuthor().getName());
+            postlist.setContent(post.getContent());
+            postlist.setBookmark(0);//일단 0으로 해놓음
+            postlist.setLike_count(postService.countPostLike(post.getId()));//일단 0으로 해놓음
         }
+        model.addAttribute("postlist" ,postlists);
+
+
 
         /*JsonArray reverse = new JsonArray();
         for (int i = json.size()-1; i>=0; i--) {
             reverse.add(json.get(i));
         }*/
 
-        return json.toString();
+        return "index";
     }
 
     /*@ResponseBody
@@ -139,4 +147,15 @@ public class PostController {
     public String like(@RequestParam(name = "id") Long id, @CookieValue(name = "accountId") @Nullable String accountId, HttpServletResponse response, Model model) {
 
     }*/
+
+    @Getter
+    @Setter
+    class Postlist{
+        String author;
+        String content;
+        int bookmark;
+        long like_count;
+
+
+    }
 }

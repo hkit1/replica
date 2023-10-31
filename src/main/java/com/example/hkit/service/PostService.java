@@ -5,10 +5,7 @@ import com.example.hkit.entity.AccountRelationship;
 import com.example.hkit.entity.Post;
 import com.example.hkit.entity.PostRelationship;
 import com.example.hkit.list.PostVisibility;
-import com.example.hkit.repository.AccountRelationshipRepository;
-import com.example.hkit.repository.AccountRepository;
-import com.example.hkit.repository.PostRelationshipRepository;
-import com.example.hkit.repository.PostRepository;
+import com.example.hkit.repository.*;
 import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -26,6 +23,7 @@ public class PostService {
     public final PostRelationshipRepository postRelationshipRepository;
     public final AccountRelationshipRepository accountRelationshipRepository;
     public final AccountRepository accountRepository;
+    private final PostLikeRepository postLikeRepository;
 
     public void save(Post post) {
         postRepository.save(post);
@@ -72,6 +70,43 @@ public class PostService {
         }
         //enum값이 open인걸 확인하고 가져옴
         return result;
+    }
+
+    public List<Post> findAll(@Nullable String accountId){
+        List<Post> list = postRepository.findAll();
+        List<Post> result = new ArrayList<>();
+        List<AccountRelationship> followed = new ArrayList<>();
+        List<Long> idList = new ArrayList<>();
+        Account my = new Account();
+        if (accountId != null) {
+            Optional<Account> a = accountRepository.findAccountByAccountID(accountId);
+            if (a.isPresent()) {
+                my = a.get();
+                followed = accountRelationshipRepository.findAccountRelationshipsByFollowed_Id(my.getId());
+            }
+        }
+        for (AccountRelationship ac : followed) {
+            idList.add(ac.getFollowed().getId());
+        }
+
+        for (Post post : list) {
+            if (post.getType().equals(PostVisibility.open)) {
+                result.add(post);
+            } else if (accountId != null && post.getType().equals(PostVisibility.hidden) && idList.contains(post.getId())) {
+                result.add(post);
+            } else if (accountId != null && post.getType().equals(PostVisibility.secret) && post.getAuthor().getId().equals(my.getId())) {
+                result.add(post);
+            }
+        }
+
+        return result;
+
+        //post
+    }
+
+    public long countPostLike(long postId){
+
+        return postLikeRepository.countPostLikeByPostId(postId);
     }
 
 }

@@ -19,6 +19,7 @@ public class PostDTO {
     private String content;
     private String type;
 
+
     public static PostDTO toDTO(Post post) {
         PostDTO postDTO = new PostDTO();
         postDTO.setContent(post.getContent());

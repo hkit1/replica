@@ -10,4 +10,6 @@ import java.util.Set;
 @Repository
 public interface PostLikeRepository extends JpaRepository<PostLike, Long> {
     Set<PostLike> findAllByPostId(Long id);
+
+    long countPostLikeByPostId(Long id);
 }
