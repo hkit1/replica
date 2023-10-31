@@ -117,45 +117,47 @@ public class PostController {
         return json.toString();
     }
 
-    @ResponseBody
-    @GetMapping("/index")
-    public String loadPost(@RequestParam(name = "accountID") @Nullable String accountID, Model model) {
-        List<Post> list = postService.findAll(accountID);
-        List<Postlist> postlists = new ArrayList<>();
-
-        for(Post post : list){
-            Postlist postlist = new Postlist();
-            postlist.setAuthor(post.getAuthor().getName());
-            postlist.setContent(post.getContent());
-            postlist.setBookmark(0);//일단 0으로 해놓음
-            postlist.setLike_count(postService.countPostLike(post.getId()));//일단 0으로 해놓음
-        }
-        model.addAttribute("postlist" ,postlists);
-
-
-
-        /*JsonArray reverse = new JsonArray();
-        for (int i = json.size()-1; i>=0; i--) {
-            reverse.add(json.get(i));
-        }*/
-
-        return "index";
-    }
-
-    /*@ResponseBody
-    @PostMapping("/like/{id}")
-    public String like(@RequestParam(name = "id") Long id, @CookieValue(name = "accountId") @Nullable String accountId, HttpServletResponse response, Model model) {
-
-    }*/
-
-    @Getter
-    @Setter
-    class Postlist{
-        String author;
-        String content;
-        int bookmark;
-        long like_count;
-
-
-    }
+//    @ResponseBody
+//    @GetMapping("/index")
+//    public String loadPost(@RequestParam(name = "accountID") @Nullable String accountID, Model model) {
+//        List<Post> list = postService.findAll(accountID);
+//        List<Postlist> postlists = new ArrayList<>();
+//
+//        for(Post post : list){
+//            Postlist postlist = new Postlist();
+//            postlist.setAuthor(post.getAuthor().getName());
+//            postlist.setContent(post.getContent());
+//            postlist.setBookmark(0);//일단 0으로 해놓음
+//            postlist.setLike_count(postService.countPostLike(post.getId()));//일단 0으로 해놓음
+//        }
+//        model.addAttribute("postlist" ,postlists);
+//
+//
+//
+//        /*JsonArray reverse = new JsonArray();
+//        for (int i = json.size()-1; i>=0; i--) {
+//            reverse.add(json.get(i));
+//        }*/
+//
+//        return "index";
+//    }
+//
+//    /*@ResponseBody
+//    @PostMapping("/like/{id}")
+//    public String like(@RequestParam(name = "id") Long id, @CookieValue(name = "accountId") @Nullable String accountId, HttpServletResponse response, Model model) {
+//
+//    }*/
+//    @Getter
+//    @Setter
+//    class Postlist{
+//        String author;
+//        String content;
+//        int bookmark;
+//        long like_count;
+//
+//
+//    }
 }
+
+
+
