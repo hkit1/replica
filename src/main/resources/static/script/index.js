@@ -86,5 +86,5 @@ function auto_size(e) {
 
 isLogin = (document.cookie.match(/^(?:.*;)?\s*accountId\s*=\s*([^;]+)(?:.*)?$/) || [undefined, null])[1];
 if (isLogin == null) {
-    document.getElementById("post_board").style.display = "none";
+    document.getElementById("post_form").style.display = "none";
 }
