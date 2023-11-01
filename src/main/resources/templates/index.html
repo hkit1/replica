@@ -133,7 +133,24 @@
                             <button type="submit" id="feed_submit">등록</button>
                         </p>
                     </form>
-                    <div id="post_box"></div>
+                    <div id="post_box">
+                        <div class="post_list" th:each="postlist: ${postlist}">
+                            <div class="post_list_name" th:text="${postlist.author}"></div>
+                            <div class="post_list_content" th:text="${postlist.content}"></div>
+                            <hr>
+                            <div class="post_list_nav">
+                                <div class="post_list_menu">
+                                    <a href=""><span class="post_list_like_image">👍</span>
+                                        <span class="post_list_like_count">좋아요<span
+                                                th:text="${postlist.like_count}"></span></span></a>
+                                    <span class="post_list_bookmark_image">🏷</span>
+                                    <span class="post_list_bookmark_count">북마크 <span
+                                            th:text="${postlist.bookmark_count}"></span></span>
+                                    <span class="post_list_datetime" th:text="${postlist.datetime}"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="post">
                     <div class="post_username"></div>

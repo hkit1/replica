@@ -170,6 +170,10 @@ header {
     margin: 20px 0;
 }
 
+.post_list_datetime {
+    float: right;
+}
+
 #feed_submit {
     width: 241px;
 }

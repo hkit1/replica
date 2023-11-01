@@ -2,13 +2,18 @@ package com.example.hkit.controller;
 
 import com.example.hkit.dto.AccountDTO;
 import com.example.hkit.entity.Account;
+import com.example.hkit.entity.Post;
 import com.example.hkit.repository.AccountRepository;
 import com.example.hkit.service.AccountService;
+import com.example.hkit.service.PostService;
 import com.google.gson.JsonObject;
 import jakarta.annotation.Nullable;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.transaction.Transactional;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -19,21 +24,41 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.time.LocalDateTime;
-import java.util.Base64;
-import java.util.Optional;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 @Controller
 @RequiredArgsConstructor
 public class AccountController {
     private final AccountService accountService;
     private final AccountRepository accountRepository;
+    private final PostService postService;
 
+    /**
+     * 메인 페이지에서 로그인 정보를 확인하고, 그에 맞는 글 목록과 닉네임을 표시함.
+     *
+     * @param accountId 쿠키에 있는 계정 ID
+     * @param response  쿠키를 전송할 파라메터
+     * @param model     웹에 표시할 데이터
+     * @return 이동할 페이지
+     */
     @GetMapping("/")
-    public String getLoginData(@CookieValue(name = "accountId") @Nullable String accountId, HttpServletResponse response, Model model) {
+    @Transactional
+    public String readData(@CookieValue(name = "accountId") @Nullable String accountId, HttpServletResponse response, Model model) {
+        @Getter
+        @Setter
+        class Postlist {
+            String author;
+            String content;
+            int bookmark_count;
+            long like_count;
+            String datetime;
+        }
+
         if (accountId != null) {
             Optional<Account> result = accountRepository.findAccountByAccountID(new String(Base64.getDecoder().decode(accountId)));
             if (result.isPresent()) {
-                model.addAttribute("login", result.get().getName());
+                model.addAttribute("login", "<a href=\"/logout\">로그아웃</a>");
             } else {
                 Cookie cookie = new Cookie("accountId", null);
                 cookie.setMaxAge(0);
@@ -43,6 +68,21 @@ public class AccountController {
         } else {
             model.addAttribute("login", "<a href=\"/login\">로그인</a>");
         }
+        List<Post> list = postService.findAll(accountId);
+        List<Postlist> postlists = new ArrayList<>();
+
+        for (Post post : list) {
+            Postlist postlist = new Postlist();
+            postlist.setAuthor(post.getAuthor().getName());
+            postlist.setContent(post.getContent());
+            postlist.setBookmark_count(0);//일단 0으로 해놓음
+            postlist.setLike_count(postService.countPostLike(post.getId()));//일단 0으로 해놓음
+            postlist.setDatetime(post.getTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+            postlists.add(postlist);
+        }
+
+        Collections.reverse(postlists);
+        model.addAttribute("postlist", postlists);
 
         return "index";
     }
@@ -82,6 +122,14 @@ public class AccountController {
         return "login";
     }
 
+    @GetMapping("/logout")
+    public String logout(HttpServletResponse response) {
+        Cookie cookie = new Cookie("accountId", null);
+        cookie.setMaxAge(0);
+        response.addCookie(cookie);
+        return "redirect:/";
+    }
+
     /**
      * 로그인 폼에서 submit 을 하면 DB에서 확인함
      *
@@ -93,7 +141,7 @@ public class AccountController {
         if (result != null) {
             response.addCookie(new Cookie("accountId", Base64.getEncoder().encodeToString(account.getAccountID().getBytes())));
             model.addAttribute("login", result.getName());
-            return "index";
+            return "redirect:/";
         } else {
             model.addAttribute("result", "아이디 또는 비밀번호가 일치하지 않습니다.");
             return "login";
@@ -151,5 +199,7 @@ public class AccountController {
             accountRepository.save(me);
             return ResponseEntity.status(HttpStatus.OK).build();
         }
+
+
     }
 }
