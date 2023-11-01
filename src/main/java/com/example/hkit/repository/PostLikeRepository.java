@@ -10,4 +10,5 @@ import java.util.Set;
 @Repository
 public interface PostLikeRepository extends JpaRepository<PostLike, Long> {
     Set<PostLike> findAllByPostId(Long id);
+    void deleteByAccount_AccountID(String id);
 }

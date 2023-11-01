@@ -73,5 +73,4 @@ public class PostService {
         //enum값이 open인걸 확인하고 가져옴
         return result;
     }
-
 }
