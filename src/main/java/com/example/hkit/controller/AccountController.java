@@ -24,10 +24,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.List;
-import java.util.Optional;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 @Controller
 @RequiredArgsConstructor
@@ -36,10 +34,27 @@ public class AccountController {
     private final AccountRepository accountRepository;
     private final PostService postService;
 
-
+    /**
+     * 메인 페이지에서 로그인 정보를 확인하고, 그에 맞는 글 목록과 닉네임을 표시함.
+     *
+     * @param accountId 쿠키에 있는 계정 ID
+     * @param response  쿠키를 전송할 파라메터
+     * @param model     웹에 표시할 데이터
+     * @return 이동할 페이지
+     */
     @GetMapping("/")
     @Transactional
-    public String getLoginData(@CookieValue(name = "accountId") @Nullable String accountId, HttpServletResponse response, Model model) {
+    public String readData(@CookieValue(name = "accountId") @Nullable String accountId, HttpServletResponse response, Model model) {
+        @Getter
+        @Setter
+        class Postlist {
+            String author;
+            String content;
+            int bookmark_count;
+            long like_count;
+            String datetime;
+        }
+
         if (accountId != null) {
             Optional<Account> result = accountRepository.findAccountByAccountID(new String(Base64.getDecoder().decode(accountId)));
             if (result.isPresent()) {
@@ -62,24 +77,15 @@ public class AccountController {
             postlist.setContent(post.getContent());
             postlist.setBookmark_count(0);//일단 0으로 해놓음
             postlist.setLike_count(postService.countPostLike(post.getId()));//일단 0으로 해놓음
+            postlist.setDatetime(post.getTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
             postlists.add(postlist);
         }
+
+        Collections.reverse(postlists);
         model.addAttribute("postlist", postlists);
 
         return "index";
     }
-
-    @Getter
-    @Setter
-    class Postlist {
-        String author;
-        String content;
-        int bookmark_count;
-        long like_count;
-
-
-    }
-
 
     /**
      * 회원가입 사이트에서 정보를 입력하고 submit 하면 실행됨.
@@ -127,7 +133,7 @@ public class AccountController {
         if (result != null) {
             response.addCookie(new Cookie("accountId", Base64.getEncoder().encodeToString(account.getAccountID().getBytes())));
             model.addAttribute("login", result.getName());
-            return "index";
+            return "redirect:/";
         } else {
             model.addAttribute("result", "아이디 또는 비밀번호가 일치하지 않습니다.");
             return "login";
