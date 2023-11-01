@@ -58,7 +58,7 @@ public class AccountController {
         if (accountId != null) {
             Optional<Account> result = accountRepository.findAccountByAccountID(new String(Base64.getDecoder().decode(accountId)));
             if (result.isPresent()) {
-                model.addAttribute("login", result.get().getName());
+                model.addAttribute("login", "<a href=\"/logout\">로그아웃</a>");
             } else {
                 Cookie cookie = new Cookie("accountId", null);
                 cookie.setMaxAge(0);
@@ -120,6 +120,14 @@ public class AccountController {
     public String loginForm(Model model) {
         model.addAttribute("result", "로그인");
         return "login";
+    }
+
+    @GetMapping("/logout")
+    public String logout(HttpServletResponse response) {
+        Cookie cookie = new Cookie("accountId", null);
+        cookie.setMaxAge(0);
+        response.addCookie(cookie);
+        return "redirect:/";
     }
 
     /**
