@@ -134,18 +134,18 @@
                         </p>
                     </form>
                     <div id="post_box">
-                        <div class="post_list">
-                            <div class="post_list_name" th:text="${post.list.name}"></div>
-                            <div class="post_list_content" th:text="${post.list.content}"></div>
+                        <div class="post_list" th:each="postlist: ${postlist}">
+                            <div class="post_list_name" th:text="${postlist.author}"></div>
+                            <div class="post_list_content" th:text="${postlist.content}"></div>
                             <hr>
                             <div class="post_list_nav">
                                 <div class="post_list_menu">
                                     <a href=""><span class="post_list_like_image">👍</span>
                                         <span class="post_list_like_count">좋아요<span
-                                                th:text="${post.list.like_count}"></span></span></a>
+                                                th:text="${postlist.like_count}"></span></span></a>
                                     <span class="post_list_bookmark_image">🏷</span>
                                     <span class="post_list_bookmark_count">북마크 <span
-                                            th:text="${post.list.bookmark_count}"></span></span>
+                                            th:text="${postlist.bookmark_count}"></span></span>
                                 </div>
                             </div>
                         </div>

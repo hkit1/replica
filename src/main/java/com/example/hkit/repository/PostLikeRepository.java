@@ -11,4 +11,6 @@ import java.util.Set;
 public interface PostLikeRepository extends JpaRepository<PostLike, Long> {
     Set<PostLike> findAllByPostId(Long id);
     void deleteByAccount_AccountID(String id);
+
+    long countPostLikeByPostId(Long id);
 }

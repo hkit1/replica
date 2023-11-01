@@ -2,13 +2,18 @@ package com.example.hkit.controller;
 
 import com.example.hkit.dto.AccountDTO;
 import com.example.hkit.entity.Account;
+import com.example.hkit.entity.Post;
 import com.example.hkit.repository.AccountRepository;
 import com.example.hkit.service.AccountService;
+import com.example.hkit.service.PostService;
 import com.google.gson.JsonObject;
 import jakarta.annotation.Nullable;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.transaction.Transactional;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -19,7 +24,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Base64;
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -27,8 +34,11 @@ import java.util.Optional;
 public class AccountController {
     private final AccountService accountService;
     private final AccountRepository accountRepository;
+    private final PostService postService;
+
 
     @GetMapping("/")
+    @Transactional
     public String getLoginData(@CookieValue(name = "accountId") @Nullable String accountId, HttpServletResponse response, Model model) {
         if (accountId != null) {
             Optional<Account> result = accountRepository.findAccountByAccountID(new String(Base64.getDecoder().decode(accountId)));
@@ -43,9 +53,33 @@ public class AccountController {
         } else {
             model.addAttribute("login", "<a href=\"/login\">로그인</a>");
         }
+        List<Post> list = postService.findAll(accountId);
+        List<Postlist> postlists = new ArrayList<>();
+
+        for (Post post : list) {
+            Postlist postlist = new Postlist();
+            postlist.setAuthor(post.getAuthor().getName());
+            postlist.setContent(post.getContent());
+            postlist.setBookmark_count(0);//일단 0으로 해놓음
+            postlist.setLike_count(postService.countPostLike(post.getId()));//일단 0으로 해놓음
+            postlists.add(postlist);
+        }
+        model.addAttribute("postlist", postlists);
 
         return "index";
     }
+
+    @Getter
+    @Setter
+    class Postlist {
+        String author;
+        String content;
+        int bookmark_count;
+        long like_count;
+
+
+    }
+
 
     /**
      * 회원가입 사이트에서 정보를 입력하고 submit 하면 실행됨.
@@ -151,5 +185,7 @@ public class AccountController {
             accountRepository.save(me);
             return ResponseEntity.status(HttpStatus.OK).build();
         }
+
+
     }
 }
