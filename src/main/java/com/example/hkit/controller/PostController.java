@@ -13,13 +13,16 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import jakarta.annotation.Nullable;
 import jakarta.transaction.Transactional;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
@@ -51,6 +54,36 @@ public class PostController {
     @GetMapping("/post")
     public String postForm() {
         return "post";
+    }
+
+    @GetMapping("/post/{id}")
+    public void getPost(@PathVariable String id, Model model) {
+        @Getter
+        @Setter
+        class Postlist {
+            Long id;
+            String author;
+            String content;
+            int bookmark_count;
+            long like_count;
+            String datetime;
+        }
+
+        Optional<Post> result = postRepository.findById(Long.valueOf(id));
+        if (result.isPresent()) {
+            Post r = result.get();
+            Postlist l = new Postlist();
+            l.id = r.getId();
+            l.author = r.getAuthor().getName();
+            l.content = r.getContent();
+            l.bookmark_count = 0;
+            l.like_count = postService.countPostLike(r.getId());
+            l.datetime = r.getTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+
+            model.addAttribute("post", l);
+        } else {
+            model.addAttribute("post", null);
+        }
     }
 
     /**
