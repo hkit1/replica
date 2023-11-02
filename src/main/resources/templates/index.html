@@ -61,7 +61,26 @@
         </div>
 
         <div id="contents">
-            <div class="tabContent" id="notice"></div>
+            <div class="tabContent" id="notice">
+                <div class="post_list" th:each="alert: ${alerts}">
+                    <a th:href="@{|post/${postlist.id}|}">
+                        <div class="post_list_name" th:text="${alerts.author}"></div>
+                        <div class="post_list_content" th:text="${alerts.content}"></div>
+                    </a>
+                    <hr>
+                    <div class="post_list_nav">
+                        <div class="post_list_menu">
+                            <a href=""><span class="post_list_like_image">👍</span>
+                                <span class="post_list_like_count">좋아요<span
+                                        th:text="${alerts.like_count}"></span></span></a>
+                            <span class="post_list_bookmark_image">🏷</span>
+                            <span class="post_list_bookmark_count">북마크 <span
+                                    th:text="${alerts.bookmark_count}"></span></span>
+                            <span class="post_list_datetime" th:text="${alerts.datetime}"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             <div class="tabContent" id="message">
                 <div class="message_list">

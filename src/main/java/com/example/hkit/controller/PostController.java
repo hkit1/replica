@@ -171,7 +171,7 @@ public class PostController {
     public void loadAlert(@CookieValue(name = "accountId") String accountId, Model model) {
         List<Post> found = new ArrayList<>();
         for (Post post : postRepository.findAll()) {
-            if (post.getContent().contains(accountId)) {
+            if (post.getContent().contains("@" + accountId)) {
                 found.add(post);
             }
         }
