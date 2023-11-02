@@ -48,6 +48,7 @@ public class AccountController {
         @Getter
         @Setter
         class Postlist {
+            long id;
             String author;
             String content;
             int bookmark_count;
@@ -73,6 +74,7 @@ public class AccountController {
 
         for (Post post : list) {
             Postlist postlist = new Postlist();
+            postlist.setId(post.getId());
             postlist.setAuthor(post.getAuthor().getName());
             postlist.setContent(post.getContent());
             postlist.setBookmark_count(0);//일단 0으로 해놓음
