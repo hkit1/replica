@@ -28,7 +28,7 @@
     <header> <!-- 헤더 영역 -->
         <div class="container">
             <div> <!-- 로고 -->
-                <a href="index.html" class="logo"></a>
+                <a href="/" class="logo"></a>
             </div>
             <div id="search">
                 <form action="/search" method="GET">
@@ -135,8 +135,10 @@
                     </form>
                     <div id="post_box">
                         <div class="post_list" th:each="postlist: ${postlist}">
-                            <div class="post_list_name" th:text="${postlist.author}"></div>
-                            <div class="post_list_content" th:text="${postlist.content}"></div>
+                            <a th:href="@{|post/${postlist.id}|}">
+                                <div class="post_list_name" th:text="${postlist.author}"></div>
+                                <div class="post_list_content" th:text="${postlist.content}"></div>
+                            </a>
                             <hr>
                             <div class="post_list_nav">
                                 <div class="post_list_menu">
