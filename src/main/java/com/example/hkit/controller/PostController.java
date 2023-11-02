@@ -23,10 +23,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Base64;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Controller
 @RequiredArgsConstructor
@@ -89,7 +86,7 @@ public class PostController {
     /**
      * 글쓰기 폼에서 submit 을 하면 작성 날짜를 추가하고 DB에 쓰기 작업함.
      */
-    @PostMapping("/post")
+    @PostMapping("`/post`")
     public String post(@CookieValue(name = "accountId") String accountId, @ModelAttribute PostDTO postDTO, Model model) {
         Optional<Account> account = accountRepository.findAccountByAccountID(new String(Base64.getDecoder().decode(accountId.getBytes())));
         if (account.isEmpty()) {
@@ -169,6 +166,18 @@ public class PostController {
         return json.toString();
     }
 
+    @ResponseBody
+    @GetMapping("/alert")
+    public void loadAlert(@CookieValue(name = "accountId") String accountId, Model model) {
+        List<Post> found = new ArrayList<>();
+        for (Post post : postRepository.findAll()) {
+            if (post.getContent().contains(accountId)) {
+                found.add(post);
+            }
+        }
+        model.addAttribute("alerts", found);
+    }
+
     /*@ResponseBody
     @PostMapping("/like/{id}")
     public String like(@RequestParam(name = "id") Long id, @CookieValue(name = "accountId") @Nullable String accountId, HttpServletResponse response, Model model) {
@@ -196,5 +205,4 @@ public class PostController {
 
         return "{ like : " + liked + " }";
     }
-
 }
