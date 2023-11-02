@@ -86,7 +86,7 @@ public class PostController {
     /**
      * 글쓰기 폼에서 submit 을 하면 작성 날짜를 추가하고 DB에 쓰기 작업함.
      */
-    @PostMapping("`/post`")
+    @PostMapping("/post")
     public String post(@CookieValue(name = "accountId") String accountId, @ModelAttribute PostDTO postDTO, Model model) {
         Optional<Account> account = accountRepository.findAccountByAccountID(new String(Base64.getDecoder().decode(accountId.getBytes())));
         if (account.isEmpty()) {

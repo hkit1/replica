@@ -4,9 +4,8 @@ import com.example.hkit.entity.DirectMessage;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.Optional;
-
 @Repository
 public interface DirectMessageRepository extends JpaRepository<DirectMessage, Long> {
-    Optional<DirectMessage> findDirectMessageBySender_AccountIDAndContent(String sender, String content);
+    //Optional<DirectMessage> findDirectMessageBySender_AccountIDAndContent(String sender, String content);
+    //Set<DirectMessage> findDirectMessagesBySender_AccountIDOrReceiver_AccountIDOOrderByDateDesc(String sender, String receiver);
 }

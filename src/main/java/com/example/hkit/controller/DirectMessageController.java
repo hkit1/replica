@@ -23,6 +23,45 @@ public class DirectMessageController {
     private final DirectMessageService directMessageService;
     private final AccountRepository accountRepository;
 
+    /*@GetMapping("/message/load")
+    public String loadMessages(@CookieValue(name = "accountId") String accountId, Model model) {
+        class Message {
+            String name;
+            String content;
+            String datetime;
+        }
+
+        Set<Message> a = new HashSet<>();
+        Set<Set<Message>> b = new HashSet<>();
+
+        Set<DirectMessage> list = directMessageRepository.findDirectMessagesBySender_AccountIDOrReceiver_AccountIDOOrderByDateDesc(accountId, accountId);
+
+        for (DirectMessage message : list) {
+            Message msg = new Message();
+            msg.name = message.getSender().getName();
+            msg.content = message.getContent();
+            msg.datetime = message.getDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+
+            boolean exists = false;
+            for(Set<Message> f : b) {
+                for(Message m : f) {
+                    if (Objects.equals(m.name, message.getSender().getName()) || Objects.equals(m.name, message.getReceiver().getName())) {
+                        f.add(msg);
+                        break;
+                    }
+                }
+            }
+            if (exists) {
+                container.add();
+            }
+            msg.setLastMessage();
+            msg.setName();
+        }
+        Collections.reverse(lists);
+        model.addAttribute("messageList", b);
+        return "redirect:/";
+    }*/
+
     @GetMapping("/message")
     public String messageForm() {
         return "index";

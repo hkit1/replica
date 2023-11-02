@@ -45,8 +45,8 @@ public class AccountController {
     @GetMapping("/")
     @Transactional
     public String readData(@CookieValue(name = "accountId") @Nullable String accountId, HttpServletResponse response, Model model) {
-        @Getter
         @Setter
+        @Getter
         class Postlist {
             long id;
             String author;
