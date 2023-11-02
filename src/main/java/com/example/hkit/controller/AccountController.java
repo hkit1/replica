@@ -4,6 +4,7 @@ import com.example.hkit.dto.AccountDTO;
 import com.example.hkit.entity.Account;
 import com.example.hkit.entity.Post;
 import com.example.hkit.repository.AccountRepository;
+import com.example.hkit.repository.PostRepository;
 import com.example.hkit.service.AccountService;
 import com.example.hkit.service.PostService;
 import com.google.gson.JsonObject;
@@ -33,6 +34,7 @@ public class AccountController {
     private final AccountService accountService;
     private final AccountRepository accountRepository;
     private final PostService postService;
+    private final PostRepository postRepository;
 
     /**
      * 메인 페이지에서 로그인 정보를 확인하고, 그에 맞는 글 목록과 닉네임을 표시함.
@@ -66,6 +68,21 @@ public class AccountController {
                 response.addCookie(cookie);
                 model.addAttribute("login", "<a href=\"/login\">로그인</a>");
             }
+
+            List<Postlist> found = new ArrayList<>();
+            for (Post post : postRepository.findAll()) {
+                if (post.getContent().contains("@" + accountId)) {
+                    Postlist postlist = new Postlist();
+                    postlist.setId(post.getId());
+                    postlist.setAuthor(post.getAuthor().getName());
+                    postlist.setContent(post.getContent());
+                    postlist.setBookmark_count(0);//일단 0으로 해놓음
+                    postlist.setLike_count(postService.countPostLike(post.getId()));//일단 0으로 해놓음
+                    postlist.setDatetime(post.getTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+                    found.add(postlist);
+                }
+            }
+            model.addAttribute("alerts", found);
         } else {
             model.addAttribute("login", "<a href=\"/login\">로그인</a>");
         }

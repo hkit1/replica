@@ -187,22 +187,32 @@ public class PostController {
     // like 좋아요 구현
     @PostMapping("/like")
     public String postLike(@RequestParam(name="id") long id, @CookieValue(name = "accountId") @Nullable String accountId) {
-        Set<PostLike> liked = postLikeRepository.findAllByPostId(id);
+        if (accountId != null) {
+            Set<PostLike> liked = postLikeRepository.findAllByPostId(id);
+            String decoded = new String(Base64.getDecoder().decode(accountId.getBytes()));
 
-        for (PostLike post : liked) {
-            if (post.getAccount().getAccountID().equals(accountId))
-                postLikeRepository.deleteByAccount_AccountID(accountId);
-            else {
+            boolean exists = false;
+            for (PostLike post : liked) {
+                if (post.getAccount().getAccountID().equals(decoded)) {
+                    postLikeRepository.deleteByAccount_AccountIDAndPost_Id(decoded, id);
+                    exists = true;
+                    break;
+                }
+            }
+
+            if (!exists) {
                 PostLike postLike = new PostLike();
                 Optional<Post> post1 = postRepository.findById(id);
                 postLike.setPost(post1.get());
-                Optional<Account> account = accountRepository.findAccountByAccountID(accountId);
+                Optional<Account> account = accountRepository.findAccountByAccountID(decoded);
                 postLike.setAccount(account.get());
 
                 postLikeRepository.save(postLike);
             }
         }
 
-        return "{ like : " + liked + " }";
+        return "redirect:/";
+
+        // return "{ like : " + liked + " }";
     }
 }

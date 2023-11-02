@@ -64,7 +64,7 @@
             <div class="tabContent" id="notice">
                 <div class="post_list" th:each="alert: ${alerts}">
                     <a th:href="@{|post/${postlist.id}|}">
-                        <div class="post_list_name" th:text="${alerts.author}"></div>
+                        <div class="post_list_name" th:text="${alerts}"></div>
                         <div class="post_list_content" th:text="${alerts.content}"></div>
                     </a>
                     <hr>
@@ -162,9 +162,13 @@
                             <hr>
                             <div class="post_list_nav">
                                 <div class="post_list_menu">
-                                    <a href=""><span class="post_list_like_image">👍</span>
+                                    <form action="/like" method="post" th:id="'p-' + ${postlist.id}">
+                                        <input name="id" th:value="${postlist.id}" type="hidden">
+                                        <a href=""
+                                           th:attr="onclick='document.getElementById(\'p-' + ${postlist.id} + '\').submit(); return false;'"><span
+                                                class="post_list_like_image">👍</span>
                                         <span class="post_list_like_count">좋아요<span
-                                                th:text="${postlist.like_count}"></span></span></a>
+                                                th:text="${postlist.like_count}"></span></span></a></form>
                                     <span class="post_list_bookmark_image">🏷</span>
                                     <span class="post_list_bookmark_count">북마크 <span
                                             th:text="${postlist.bookmark_count}"></span></span>
