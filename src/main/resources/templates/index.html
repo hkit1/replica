@@ -10,6 +10,17 @@
     <title>메인 페이지</title>
 </head>
 <body>
+<div id="css-link-container"></div>
+<script>
+    function dead() {
+        var cssLink = document.createElement("link")
+        cssLink.rel = "stylesheet";
+        cssLink.type = "text/css";
+        cssLink.href = /*[[@{/css/test.css}]]*/ '';
+
+        document.getElementById("css-link-container").appendChild(cssLink);
+    }
+</script>
 <div class="area">
     <ul class="circles">
         <li></li>
@@ -48,7 +59,7 @@
                 <label for="tab1">알림</label>
             </div>
             <div>
-                <input id="tab2" name="tabs" onclick="switchMenu(1)" type="radio">
+                <input id="tab2" name="tabs" onclick="location.href = '/message'" type="radio">
                 <label for="tab2">쪽지</label>
             </div>
             <div>
@@ -62,17 +73,21 @@
 
         <div id="contents">
             <div class="tabContent" id="notice">
-                <div class="post_list" th:each="alert: ${alerts}">
-                    <a th:href="@{|post/${postlist.id}|}">
-                        <div class="post_list_name" th:text="${alerts}"></div>
-                        <div class="post_list_content" th:text="${alerts.content}"></div>
+                <div class="post_list" th:each="alerts: ${alerts}">
+                    <a th:href="@{|post/${alerts.id}|}">
+                        <div class="post_list_name" th:text="${alerts.author}"></div>
+                        <div class="post_list_content" th:utext="${alerts.content}"></div>
                     </a>
                     <hr>
                     <div class="post_list_nav">
                         <div class="post_list_menu">
-                            <a href=""><span class="post_list_like_image">👍</span>
-                                <span class="post_list_like_count">좋아요<span
-                                        th:text="${alerts.like_count}"></span></span></a>
+                            <form action="/like" method="post" th:id="'p-' + ${alerts.id}">
+                                <input name="id" th:value="${alerts.id}" type="hidden">
+                                <a href=""
+                                   th:attr="onclick='document.getElementById(\'p-' + ${alerts.id} + '\').submit(); return false;'"><span
+                                        class="post_list_like_image">👍</span>
+                                    <span class="post_list_like_count">좋아요<span
+                                            th:text="${alerts.like_count}"></span></span></a></form>
                             <span class="post_list_bookmark_image">🏷</span>
                             <span class="post_list_bookmark_count">북마크 <span
                                     th:text="${alerts.bookmark_count}"></span></span>
@@ -157,7 +172,7 @@
                         <div class="post_list" th:each="postlist: ${postlist}">
                             <a th:href="@{|post/${postlist.id}|}">
                                 <div class="post_list_name" th:text="${postlist.author}"></div>
-                                <div class="post_list_content" th:text="${postlist.content}"></div>
+                                <div class="post_list_content" th:utext="${postlist.content}"></div>
                             </a>
                             <hr>
                             <div class="post_list_nav">
@@ -177,10 +192,6 @@
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="post">
-                    <div class="post_username"></div>
-                    <div class="post_contents"></div>
                 </div>
             </div>
             <div class="tabContent" id="setting"></div>

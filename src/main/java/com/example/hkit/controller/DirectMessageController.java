@@ -64,7 +64,7 @@ public class DirectMessageController {
 
     @GetMapping("/message")
     public String messageForm() {
-        return "index";
+        return "message";
     }
 
     @PostMapping("/message")

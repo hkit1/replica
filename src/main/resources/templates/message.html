@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Noto Sans KR" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/index.css}">
+    <link rel="stylesheet" th:href="@{/css/animated.css}">
+    <link rel="stylesheet" th:href="@{/css/test.css}">
+    <title>메인 페이지</title>
+    <script th:src="@{/script/index.js}"></script>
+    <script>
+        switchMenu(1);
+    </script>
+</head>
+<body>
+<div class="area">
+    <ul class="circles">
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+    </ul>
+</div>
+<span id="secret" style="display: none" th:utext="${result}"></span>
+<header> <!-- 헤더 영역 -->
+    <div class="container">
+        <div> <!-- 로고 -->
+            <a class="logo" href="/"></a>
+        </div>
+        <div id="search">
+            <form action="/search" method="GET">
+                <input name="search" placeholder="검색" type="search">
+            </form>
+        </div>
+    </div>
+</header>
+<div class="container">
+    <div id="tabMenu"> <!-- 왼쪽 네비게이션 영역 -->
+        <div>
+            <input id="tab3" name="tabs" onclick="switchMenu(2)" type="radio">
+            <label for="tab3">피드</label>
+        </div>
+        <div>
+            <input id="tab1" name="tabs" onclick="switchMenu(0)" type="radio">
+            <label for="tab1">알림</label>
+        </div>
+        <div>
+            <input id="tab2" name="tabs" onclick="switchMenu(1)" type="radio">
+            <label for="tab2">쪽지</label>
+        </div>
+        <div>
+            <input id="tab4" name="tabs" onclick="switchMenu(3)" type="radio">
+            <label for="tab4">설정</label>
+        </div>
+        <div>
+            <label for="tab5"><span id="tab5" th:utext="${login}"></span></label>
+        </div>
+    </div>
+
+    <div id="contents">
+        <div class="tabContent" id="notice">
+            <div class="post_list" th:each="alerts: ${alerts}">
+                <a th:href="@{|post/${alerts.id}|}">
+                    <div class="post_list_name" th:text="${alerts.author}"></div>
+                    <div class="post_list_content" th:utext="${alerts.content}"></div>
+                </a>
+                <hr>
+                <div class="post_list_nav">
+                    <div class="post_list_menu">
+                        <form action="/like" method="post" th:id="'p-' + ${alerts.id}">
+                            <input name="id" th:value="${alerts.id}" type="hidden">
+                            <a href=""
+                               th:attr="onclick='document.getElementById(\'p-' + ${alerts.id} + '\').submit(); return false;'"><span
+                                    class="post_list_like_image">👍</span>
+                                <span class="post_list_like_count">좋아요<span
+                                        th:text="${alerts.like_count}"></span></span></a></form>
+                        <span class="post_list_bookmark_image">🏷</span>
+                        <span class="post_list_bookmark_count">북마크 <span
+                                th:text="${alerts.bookmark_count}"></span></span>
+                        <span class="post_list_datetime" th:text="${alerts.datetime}"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tabContent" id="message">
+            <div class="message_list">
+                <div class="message_header">
+                    <div class="message_header_header">
+                        <p class="message_font">쪽지</p>
+                    </div>
+
+                    <div id="message_search">
+                        <form>
+                            <input name="message_search" placeholder="쪽지 검색하기" type="search">
+                        </form>
+                    </div>
+                </div>
+
+                <div class="message_body">
+                    <div class="message_content" th:each="messageList: ${messageList}">
+                        <a href="#"> <!-- TODO : 쪽지 1개 누르면 바로 오른쪽에 상세 쪽지 나오도록 (사람마다 달라야 함!) -->
+                            <div class="photo"> <!-- 왼쪽 사진 영역 -->
+
+                            </div>
+
+                            <div class="message_nickname_content">
+                                <div class="message_nickname">
+                                    <span th:text="${messageList.name}"></span>
+                                </div>
+                                <div class="message_cont">
+                                    <span th:text="${messageList.lastMessage}"></span>
+                                    링크에 😆반응을 보냈습니다
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="message_detail" style="display: block">
+                <div class="message_detail_header">
+                    <p class="message_font">BigRabbitVillain</p>
+                </div>
+
+                <div class="message_detail_content"> <!-- 오른쪽 상세 메시지 영역에 가운데 메시지 출력 부분 -->
+
+                </div>
+
+                <div class="message_detail_footer">
+                    <div class="message_write">
+                        <form>
+                            <input name="message_write" placeholder="새 쪽지 작성하기" type="search">
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tabContent" id="feed">
+            <div id="post_board">
+                <form action="/post" id="post_form" method="POST">
+                        <textarea id="post_zone" name="content" oninput="auto_size(this)"
+                                  placeholder="무슨 생각을 하고 계신가요?"></textarea>
+                    <p>
+                            <span id="type_box">
+                                <label for="visibility">공개 설정</label>
+                                <select id="visibility" name="type">
+                                    <option value="open">공개</option>
+                                    <option value="hidden">팔로워 에게만 공개</option>
+                                    <option value="secret">비공개</option>
+                                </select>
+                            </span>
+                        <button id="feed_submit" type="submit">등록</button>
+                    </p>
+                </form>
+                <div id="post_box">
+                    <div class="post_list" th:each="postlist: ${postlist}">
+                        <a th:href="@{|post/${postlist.id}|}">
+                            <div class="post_list_name" th:text="${postlist.author}"></div>
+                            <div class="post_list_content" th:utext="${postlist.content}"></div>
+                        </a>
+                        <hr>
+                        <div class="post_list_nav">
+                            <div class="post_list_menu">
+                                <form action="/like" method="post" th:id="'p-' + ${postlist.id}">
+                                    <input name="id" th:value="${postlist.id}" type="hidden">
+                                    <a href=""
+                                       th:attr="onclick='document.getElementById(\'p-' + ${postlist.id} + '\').submit(); return false;'"><span
+                                            class="post_list_like_image">👍</span>
+                                        <span class="post_list_like_count">좋아요<span
+                                                th:text="${postlist.like_count}"></span></span></a></form>
+                                <span class="post_list_bookmark_image">🏷</span>
+                                <span class="post_list_bookmark_count">북마크 <span
+                                        th:text="${postlist.bookmark_count}"></span></span>
+                                <span class="post_list_datetime" th:text="${postlist.datetime}"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tabContent" id="setting"></div>
+
+    </div>
+</div>
+
+<script crossorigin="anonymous"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

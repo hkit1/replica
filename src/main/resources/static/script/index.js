@@ -43,3 +43,7 @@ isLogin = (document.cookie.match(/^(?:.*;)?\s*accountId\s*=\s*([^;]+)(?:.*)?$/) 
 if (isLogin == null) {
     document.getElementById("post_form").style.display = "none";
 }
+
+function dead() {
+
+}

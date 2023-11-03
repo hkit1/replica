@@ -27,6 +27,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Controller
 @RequiredArgsConstructor
@@ -58,8 +60,11 @@ public class AccountController {
             String datetime;
         }
 
+        Pattern p = Pattern.compile("@[a-zA-Z0-9]+");
+
         if (accountId != null) {
-            Optional<Account> result = accountRepository.findAccountByAccountID(new String(Base64.getDecoder().decode(accountId)));
+            String decoded = new String(Base64.getDecoder().decode(accountId));
+            Optional<Account> result = accountRepository.findAccountByAccountID(decoded);
             if (result.isPresent()) {
                 model.addAttribute("login", "<a href=\"/logout\">로그아웃</a>");
             } else {
@@ -71,11 +76,20 @@ public class AccountController {
 
             List<Postlist> found = new ArrayList<>();
             for (Post post : postRepository.findAll()) {
-                if (post.getContent().contains("@" + accountId)) {
+                if (post.getContent().contains("@" + decoded)) {
                     Postlist postlist = new Postlist();
                     postlist.setId(post.getId());
                     postlist.setAuthor(post.getAuthor().getName());
-                    postlist.setContent(post.getContent());
+                    Matcher m = p.matcher(post.getContent());
+                    String text = post.getContent();
+                    while (m.find()) {
+                        Optional<Account> r = accountRepository.findAccountByName(m.group().replace("@", ""));
+                        if (r.isPresent()) {
+                            text = text.replace(m.group(), "<span style=\"color: rgb(29, 155, 240);\">" + m.group() + "</span>");
+                        }
+                    }
+
+                    postlist.setContent(text);
                     postlist.setBookmark_count(0);//일단 0으로 해놓음
                     postlist.setLike_count(postService.countPostLike(post.getId()));//일단 0으로 해놓음
                     postlist.setDatetime(post.getTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
@@ -93,7 +107,17 @@ public class AccountController {
             Postlist postlist = new Postlist();
             postlist.setId(post.getId());
             postlist.setAuthor(post.getAuthor().getName());
-            postlist.setContent(post.getContent());
+
+            Matcher m = p.matcher(post.getContent());
+            String text = post.getContent();
+            while (m.find()) {
+                Optional<Account> result = accountRepository.findAccountByName(m.group().replace("@", ""));
+                if (result.isPresent()) {
+                    text = text.replace(m.group(), "<span style=\"color: rgb(29, 155, 240);\">" + m.group() + "</span>");
+                }
+            }
+
+            postlist.setContent(text);
             postlist.setBookmark_count(0);//일단 0으로 해놓음
             postlist.setLike_count(postService.countPostLike(post.getId()));//일단 0으로 해놓음
             postlist.setDatetime(post.getTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
